@@ -1,27 +1,70 @@
+/* =========================================================
+   GLOBAL DESIGN TOKENS
+========================================================= */
+
 :root {
-  --bg: #f5f7fb;
+  --bg: #f6f8fb;
   --card: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --primary: #111827;
-  --primary-soft: #e5e7eb;
-  --border: #e5e7eb;
-  --danger: #b91c1c;
-  --warning-bg: #fff7ed;
-  --warning-text: #c2410c;
-  --radius: 18px;
-  --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+
+  /* One accent color: use only for main buttons, active states and prices */
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --accent-soft: #eff6ff;
+
+  /* Error and warning colors */
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --warning: #d97706;
+  --warning-soft: #fffbeb;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
+/* =========================================================
+   INFO PANEL
+========================================================= */
+
+.infoPanel {
+  margin-top: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.infoPanel h2 {
+  margin-top: 0;
+}
+
+.infoPanel p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+/* =========================================================
+   BASE RESET
+========================================================= */
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inherit;
 }
 
 a {
@@ -40,139 +83,120 @@ button {
   cursor: pointer;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 50;
-  height: 72px;
-  padding: 0 5%;
-  background: rgba(255, 255, 255, 0.9);
+  z-index: 100;
+  min-height: 72px;
+  padding: 1rem 2.5rem;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   font-weight: 800;
   font-size: 1.1rem;
 }
 
-.brandIcon {
+.brandLogo {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: var(--primary);
+  background: var(--text);
   color: white;
   display: grid;
   place-items: center;
-  font-size: 0.9rem;
+  font-weight: 800;
 }
 
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: 0.95rem;
+  gap: 1.3rem;
+  font-weight: 650;
 }
 
 .navLinks a:hover {
-  color: var(--muted);
+  color: var(--accent);
 }
 
 .cartLink {
-  font-weight: 700;
+  color: var(--accent);
 }
 
-.navButton,
-.primaryButton,
-.secondaryButton,
-.dangerButton {
-  border: none;
+.userBadge {
+  padding: 0.55rem 0.8rem;
   border-radius: 999px;
-  padding: 11px 18px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 800;
 }
 
-.navButton,
-.primaryButton {
-  background: var(--primary);
+.navButton {
+  border: none;
+  background: var(--text);
   color: white;
+  padding: 0.8rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 800;
 }
 
-.secondaryButton {
-  background: var(--primary-soft);
-  color: var(--text);
+.mobileMenuButton {
+  display: none;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  font-size: 1.3rem;
 }
 
-.dangerButton {
-  background: #fee2e2;
-  color: var(--danger);
-}
-
-.fullButton {
-  width: 100%;
-}
-
-.buttonRow {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
 
 .page {
-  padding: 40px 5%;
-  max-width: 1400px;
+  width: min(1180px, calc(100% - 2rem));
   margin: 0 auto;
+  padding: 2rem 0 4rem;
 }
 
 .narrowPage {
-  max-width: 620px;
+  width: min(520px, calc(100% - 2rem));
 }
 
-.hero {
-  min-height: 300px;
-  background:
-    radial-gradient(circle at top right, rgba(17, 24, 39, 0.18), transparent 35%),
-    var(--card);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  border-radius: 32px;
-  padding: 54px;
+.pageHeader {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
-}
-
-.hero h1 {
-  font-size: clamp(2.4rem, 5vw, 5rem);
-  line-height: 0.95;
-  margin: 10px 0 20px;
-  max-width: 850px;
-  letter-spacing: -0.06em;
-}
-
-.heroText {
-  max-width: 650px;
-  color: var(--muted);
-  line-height: 1.7;
-  font-size: 1.1rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 0.6rem;
   color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .muted {
@@ -182,296 +206,448 @@ button {
 
 .message {
   color: var(--muted);
-  margin: 10px 0 0;
+  font-weight: 650;
 }
 
-.pageHeader,
-.sectionTitle {
+.priceHighlight {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* =========================================================
+   HERO SECTION
+========================================================= */
+
+.hero {
+  min-height: 280px;
+  border-radius: var(--radius-lg);
+  padding: 3.5rem;
+  background:
+          radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
+          linear-gradient(135deg, #ffffff, #f8fafc);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 24px;
+  margin-bottom: 2rem;
 }
 
-.pageHeader h1,
-.sectionTitle h2 {
+.hero h1 {
+  max-width: 720px;
   margin: 0;
-  font-size: 2.2rem;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
 }
+
+.heroText {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   BUTTONS
+   Reusable buttons.
+========================================================= */
+
+.primaryButton,
+.secondaryButton,
+.dangerButton {
+  border: none;
+  min-height: 44px;
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 850;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.primaryButton {
+  background: var(--accent);
+  color: white;
+}
+
+.primaryButton:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  background: white;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.secondaryButton:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.dangerButton {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.fullButton {
+  width: 100%;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.formCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.formCard h1,
+.formCard h2 {
+  margin-top: 0;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 800;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--text);
+  padding: 0.9rem 1rem;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* Error styling so users do not miss mistakes */
+.inputError {
+  border-color: var(--danger) !important;
+  background: var(--danger-soft);
+}
+
+.errorMessage {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border: 1px solid #fecaca;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+}
+
+.successMessage {
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+}
+
+/* =========================================================
+   LOCATION CARD
+========================================================= */
 
 .shopSection {
   display: grid;
-  gap: 26px;
-}
-
-.locationCard,
-.formCard,
-.tableCard,
-.summaryCard,
-.orderCard,
-.alertCard,
-.infoPanel,
-.emptyState,
-.statCard {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 24px;
+  gap: 1.5rem;
 }
 
 .locationCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 24px;
-  align-items: center;
+  gap: 1rem;
 }
 
 .locationActions {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
   align-items: center;
 }
 
-.locationActions select,
-.form input,
-.form textarea,
-.form select,
-.cartControls input,
-.orderTop select,
-.tableInput {
-  width: 100%;
+/* =========================================================
+   FILTER BAR
+========================================================= */
+
+.filterBar {
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-  background: white;
-  color: var(--text);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 0.8rem;
 }
+
+.sectionTitle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.sectionTitle h2 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
 }
 
 .productCard {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .productImage {
-  height: 180px;
-  background: linear-gradient(135deg, #e5e7eb, #f9fafb);
+  height: 170px;
+  background:
+          radial-gradient(circle at top right, rgba(37, 99, 235, 0.18), transparent 38%),
+          #eef2ff;
+  color: var(--accent);
   display: grid;
   place-items: center;
-  font-weight: 900;
-  font-size: 3rem;
-  color: #9ca3af;
+  font-size: 2.5rem;
+  font-weight: 950;
 }
 
 .productBody {
-  padding: 22px;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  padding: 1.3rem;
 }
 
 .productCategory {
-  margin: 0;
   color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 900;
 }
 
 .productBody h3 {
-  margin: 10px 0;
+  margin: 0.4rem 0;
   font-size: 1.25rem;
 }
 
 .productMeta {
-  margin: auto 0 14px;
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  font-weight: 800;
+  gap: 1rem;
+  margin: 1rem 0;
+  font-weight: 850;
 }
 
 .stockWarning {
-  margin: 0 0 14px;
-  background: var(--warning-bg);
-  color: var(--warning-text);
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  color: var(--warning);
+  background: var(--warning-soft);
+  border: 1px solid #fed7aa;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-weight: 850;
 }
 
-.form {
+/* =========================================================
+   CART AND CHECKOUT
+========================================================= */
+
+.cartLayout {
   display: grid;
-  gap: 16px;
-}
-
-.form label {
-  display: grid;
-  gap: 8px;
-  font-weight: 700;
-}
-
-.form textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-.cartLayout,
-.adminTwoColumn {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 24px;
+  grid-template-columns: 1fr 340px;
+  gap: 1.4rem;
   align-items: start;
 }
 
 .cartList,
 .orderList {
   display: grid;
-  gap: 18px;
+  gap: 1rem;
+}
+
+.cartItem,
+.orderCard,
+.summaryCard,
+.tableCard,
+.alertCard,
+.statCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .cartItem {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
   display: flex;
   justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-}
-
-.cartItem h3 {
-  margin: 0 0 6px;
+  gap: 1rem;
 }
 
 .cartControls {
-  min-width: 180px;
-  display: grid;
-  gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
-.summaryCard {
-  position: sticky;
-  top: 92px;
+.cartControls input {
+  width: 88px;
+}
+
+.checkoutSummary {
+  margin: 1.5rem 0;
+  border-top: 1px solid var(--border);
 }
 
 .summaryRow,
 .miniRow {
   display: flex;
   justify-content: space-between;
-  gap: 14px;
-  padding: 12px 0;
+  gap: 1rem;
+  padding: 0.85rem 0;
   border-bottom: 1px solid var(--border);
 }
 
 .totalLine {
-  font-size: 1.2rem;
-  border-bottom: none;
-}
-
-.checkoutSummary {
-  margin: 22px 0;
+  font-size: 1.1rem;
+  font-weight: 900;
 }
 
 .orderTop {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
   align-items: center;
-}
-
-.orderTop h2,
-.alertCard h2 {
-  margin: 0;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .statusPill {
-  display: inline-flex;
-  padding: 8px 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 0.5rem 0.8rem;
   border-radius: 999px;
-  background: var(--primary-soft);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 0.85rem;
 }
 
 .statusPill.warning {
-  background: var(--warning-bg);
-  color: var(--warning-text);
+  color: var(--warning);
+  background: var(--warning-soft);
 }
 
-.miniTable {
-  margin-top: 14px;
-  border-top: 1px solid var(--border);
-}
+/* =========================================================
+   ADMIN LAYOUT
+   Sidebar and admin content area.
+========================================================= */
 
 .adminLayout {
+  width: min(1320px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
   display: grid;
-  grid-template-columns: 250px 1fr;
-  min-height: calc(100vh - 72px);
-}
-
-.adminSidebar {
-  background: #111827;
-  color: white;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.adminSidebar h2 {
-  margin: 0 0 10px;
-}
-
-.adminSidebar a {
-  padding: 12px 14px;
-  border-radius: 12px;
-  color: #d1d5db;
-}
-
-.adminSidebar a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
 }
 
 .adminContent {
   min-width: 0;
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 24px;
+.adminSidebar {
+  position: sticky;
+  top: 92px;
+  align-self: start;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.statCard p {
+.adminSidebarHeader h2 {
   margin: 0;
-  color: var(--muted);
-  font-weight: 700;
 }
 
-.statCard h2 {
-  margin: 8px 0 0;
-  font-size: 2.5rem;
+.adminSidebarHeader p {
+  color: var(--muted);
+  margin-top: 0.35rem;
 }
+
+.adminSidebarLinks {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.adminLink {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.adminLink:hover {
+  background: #f8fafc;
+  color: var(--text);
+}
+
+.activeAdminLink {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* =========================================================
+   ADMIN TABLES
+   Tables used for inventory, products, locations and orders.
+========================================================= */
 
 .responsiveTable {
   width: 100%;
@@ -486,87 +662,300 @@ table {
 
 th,
 td {
+  padding: 1rem;
   text-align: left;
-  padding: 14px;
   border-bottom: 1px solid var(--border);
 }
 
 th {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
 .tableInput {
-  max-width: 110px;
+  min-width: 110px;
+}
+
+.adminTwoColumn {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.4rem;
+  align-items: start;
 }
 
 .alertGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
 }
 
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.statCard p {
+  color: var(--muted);
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.statCard h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
 .emptyState {
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
   text-align: center;
+  color: var(--muted);
 }
 
 .emptyState h2 {
+  color: var(--text);
   margin-top: 0;
 }
 
-@media (max-width: 1000px) {
-  .productGrid,
-  .statsGrid,
-  .alertGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.smallEmptyState {
+  margin-top: 1rem;
+}
+
+/* =========================================================
+   TOAST NOTIFICATION
+========================================================= */
+
+.toast {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  z-index: 9999;
+  max-width: 360px;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: var(--text);
+  color: white;
+  box-shadow: var(--shadow-md);
+  font-weight: 850;
+  animation: slideIn 0.2s ease;
+}
+
+.toast-success {
+  border-left: 6px solid #22c55e;
+}
+
+.toast-error {
+  border-left: 6px solid var(--danger);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   TABLET RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filterBar {
+    grid-template-columns: 1fr 1fr;
   }
 
   .cartLayout,
-  .adminTwoColumn,
-  .locationCard,
+  .adminTwoColumn {
+    grid-template-columns: 1fr;
+  }
+
+  .statGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .alertGrid {
+    grid-template-columns: 1fr;
+  }
+
   .adminLayout {
     grid-template-columns: 1fr;
   }
 
   .adminSidebar {
-    flex-direction: row;
-    overflow-x: auto;
+    position: static;
   }
 
-  .summaryCard {
-    position: static;
+  .adminSidebarLinks {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+  }
+
+  .adminLink {
+    white-space: nowrap;
   }
 }
 
-@media (max-width: 700px) {
+/* =========================================================
+   MOBILE RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 768px) {
   .navbar {
-    height: auto;
-    padding: 16px 5%;
+    padding: 1rem;
     align-items: flex-start;
-    gap: 16px;
-    flex-direction: column;
+  }
+
+  .mobileMenuButton {
+    display: block;
   }
 
   .navLinks {
-    flex-wrap: wrap;
+    display: none;
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: 72px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: var(--shadow-md);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .navLinksOpen {
+    display: flex;
+  }
+
+  .navLinks a,
+  .navLinks button,
+  .userBadge {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page {
+    width: min(100% - 1rem, 1180px);
+    padding-top: 1rem;
   }
 
   .hero {
-    padding: 30px;
+    padding: 2rem 1.2rem;
+    min-height: auto;
   }
 
-  .productGrid,
-  .statsGrid,
-  .alertGrid {
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .locationActions {
     grid-template-columns: 1fr;
   }
 
-  .locationActions,
-  .pageHeader,
+  .filterBar {
+    grid-template-columns: 1fr;
+  }
+
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .cartItem {
     flex-direction: column;
-    align-items: stretch;
+  }
+
+  .cartControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cartControls input {
+    flex: 1;
+  }
+
+  .orderTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .summaryRow,
+  .miniRow {
+    align-items: flex-start;
+  }
+
+  .adminLayout {
+    width: min(100% - 1rem, 1320px);
+    padding-top: 1rem;
+  }
+
+  .formCard,
+  .tableCard,
+  .cartItem,
+  .orderCard,
+  .summaryCard,
+  .alertCard,
+  .statCard,
+  .locationCard {
+    padding: 1.1rem;
+  }
+
+  .toast {
+    left: 1rem;
+    right: 1rem;
+    top: 86px;
+    max-width: none;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 420px) {
+  .brand span:last-child {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .sectionTitle h2 {
+    font-size: 1.6rem;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+  }
+
+  .buttonRow button {
+    width: 100%;
   }
 }
