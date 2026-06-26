@@ -3,13 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCartItems, getCurrentUser, logoutUser } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  function getCurrentPage(href) {
+    return pathname === href ? "page" : undefined;
+  }
 
   function refreshNavbar() {
     const cartItems = getCartItems();
@@ -49,28 +54,48 @@ export default function Navbar() {
             className="mobileMenuButton"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
         >
           ☰
         </button>
 
-        <nav className={`navLinks ${menuOpen ? "navLinksOpen" : ""}`}>
-          <Link href="/" onClick={() => setMenuOpen(false)}>
+        <nav
+            className={`navLinks ${menuOpen ? "navLinksOpen" : ""}`}
+            id="primary-navigation"
+            aria-label="Primary navigation"
+        >
+          <Link href="/" onClick={() => setMenuOpen(false)} aria-current={getCurrentPage("/")}>
             Shop
           </Link>
 
           {user && (
-              <Link href="/orders" onClick={() => setMenuOpen(false)}>
+              <Link
+                  href="/orders"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={getCurrentPage("/orders")}
+              >
                 Orders
               </Link>
           )}
 
           {user?.role === "admin" && (
-              <Link href="/admin" onClick={() => setMenuOpen(false)}>
+              <Link
+                  href="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={pathname.startsWith("/admin") ? "page" : undefined}
+              >
                 Admin
               </Link>
           )}
 
-          <Link href="/cart" className="cartLink" onClick={() => setMenuOpen(false)}>
+          <Link
+              href="/cart"
+              className="cartLink"
+              onClick={() => setMenuOpen(false)}
+              aria-current={getCurrentPage("/cart")}
+              aria-label={`Cart with ${cartCount} items`}
+          >
             Cart ({cartCount})
           </Link>
 
@@ -83,10 +108,19 @@ export default function Navbar() {
               </>
           ) : (
               <>
-                <Link href="/login" onClick={() => setMenuOpen(false)}>
+                <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={getCurrentPage("/login")}
+                >
                   Login
                 </Link>
-                <Link href="/signup" className="navButton" onClick={() => setMenuOpen(false)}>
+                <Link
+                    href="/signup"
+                    className="navButton"
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={getCurrentPage("/signup")}
+                >
                   Sign Up
                 </Link>
               </>

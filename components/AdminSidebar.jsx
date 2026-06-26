@@ -22,17 +22,18 @@ export default function AdminSidebar() {
                 <p>Manage store data</p>
             </div>
 
-            <div className="adminSidebarLinks">
+            <nav className="adminSidebarLinks" aria-label="Admin navigation">
                 {links.map((link) => (
                     <Link
                         key={link.href}
                         href={link.href}
                         className={pathname === link.href ? "adminLink activeAdminLink" : "adminLink"}
+                        aria-current={pathname === link.href ? "page" : undefined}
                     >
                         {link.label}
                     </Link>
                 ))}
-            </div>
+            </nav>
         </aside>
     );
 }

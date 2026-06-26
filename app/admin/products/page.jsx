@@ -42,7 +42,7 @@ export default function AdminProductsPage() {
   }
 
   return (
-      <main className="page">
+      <main className="page" id="main-content">
         <div className="pageHeader">
           <div>
             <p className="eyebrow">Admin</p>
@@ -130,6 +130,7 @@ export default function AdminProductsPage() {
                         <button
                             className="dangerButton"
                             onClick={() => handleDelete(product.id)}
+                            aria-label={`Delete ${product.name}`}
                         >
                           Delete
                         </button>

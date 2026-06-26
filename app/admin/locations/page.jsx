@@ -38,7 +38,7 @@ export default function AdminLocationsPage() {
   }
 
   return (
-    <main className="page">
+    <main className="page" id="main-content">
       <div className="pageHeader">
         <div>
           <p className="eyebrow">Admin</p>
@@ -94,7 +94,11 @@ export default function AdminLocationsPage() {
                     <td>{location.city}</td>
                     <td>{location.address}</td>
                     <td>
-                      <button className="dangerButton" onClick={() => handleDelete(location.id)}>
+                      <button
+                        className="dangerButton"
+                        onClick={() => handleDelete(location.id)}
+                        aria-label={`Delete ${location.name}`}
+                      >
                         Delete
                       </button>
                     </td>

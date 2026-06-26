@@ -15,7 +15,7 @@ export default function OrdersPage() {
 
   if (!user) {
     return (
-        <main className="page">
+        <main className="page" id="main-content">
           <div className="emptyState">
             <h2>Please log in to view your orders.</h2>
             <p>Your order history is connected to your account.</p>
@@ -28,7 +28,7 @@ export default function OrdersPage() {
   }
 
   return (
-      <main className="page">
+      <main className="page" id="main-content">
         <div className="pageHeader">
           <div>
             <p className="eyebrow">User area</p>

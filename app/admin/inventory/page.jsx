@@ -26,7 +26,7 @@ export default function AdminInventoryPage() {
   }
 
   return (
-    <main className="page">
+    <main className="page" id="main-content">
       <div className="pageHeader">
         <div>
           <p className="eyebrow">Admin</p>
@@ -56,6 +56,7 @@ export default function AdminInventoryPage() {
                   <td>
                     <input
                       className="tableInput"
+                      aria-label={`Price for ${row.productName} at ${row.locationName}`}
                       type="number"
                       value={row.price}
                       onChange={(e) => handleChange(row, "price", e.target.value)}
@@ -64,6 +65,7 @@ export default function AdminInventoryPage() {
                   <td>
                     <input
                       className="tableInput"
+                      aria-label={`Stock for ${row.productName} at ${row.locationName}`}
                       type="number"
                       value={row.stock}
                       onChange={(e) => handleChange(row, "stock", e.target.value)}
@@ -72,6 +74,7 @@ export default function AdminInventoryPage() {
                   <td>
                     <input
                       className="tableInput"
+                      aria-label={`Low-stock threshold for ${row.productName} at ${row.locationName}`}
                       type="number"
                       value={row.lowStockThreshold}
                       onChange={(e) => handleChange(row, "lowStockThreshold", e.target.value)}
