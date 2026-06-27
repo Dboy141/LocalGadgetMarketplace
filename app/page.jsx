@@ -2,7 +2,7 @@ import ProductBrowser from "@/components/ProductBrowser";
 
 export default function HomePage() {
   return (
-    <main className="page">
+    <main className="page" id="main-content">
       <section className="hero">
         <div>
           <p className="eyebrow">Location-based gadget shopping</p>

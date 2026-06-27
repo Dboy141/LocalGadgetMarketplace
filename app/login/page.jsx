@@ -28,7 +28,7 @@ export default function LoginPage() {
   }
 
   return (
-      <main className="page narrowPage">
+      <main className="page narrowPage" id="main-content">
         <div className="formCard">
           <h1>Login</h1>
           <p className="muted">Use this test user: user@test.com / password123</p>

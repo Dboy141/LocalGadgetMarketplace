@@ -34,7 +34,7 @@ export default function SignupPage() {
   }
 
   return (
-      <main className="page narrowPage">
+      <main className="page narrowPage" id="main-content">
         <div className="formCard">
           <h1>Create Account</h1>
           <p className="muted">

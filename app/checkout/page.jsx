@@ -49,7 +49,7 @@ export default function CheckoutPage() {
   }
 
   return (
-      <main className="page narrowPage">
+      <main className="page narrowPage" id="main-content">
         <div className="formCard">
           <p className="eyebrow">No payment gateway yet</p>
           <h1>Checkout</h1>

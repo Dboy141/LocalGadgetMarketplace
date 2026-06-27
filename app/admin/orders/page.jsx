@@ -20,7 +20,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <main className="page">
+    <main className="page" id="main-content">
       <div className="pageHeader">
         <div>
           <p className="eyebrow">Admin</p>
@@ -39,6 +39,7 @@ export default function AdminOrdersPage() {
               <div className="orderTop">
                 <h2>Order #{order.id}</h2>
                 <select
+                  aria-label={`Status for order ${order.id}`}
                   value={order.status}
                   onChange={(e) => handleStatusChange(order.id, e.target.value)}
                 >

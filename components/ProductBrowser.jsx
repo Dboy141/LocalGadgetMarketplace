@@ -163,7 +163,14 @@ export default function ProductBrowser() {
           </div>
 
           <div className="locationActions">
-            <select value={selectedLocation} onChange={handleManualLocationChange}>
+            <label className="visuallyHidden" htmlFor="shopping-location">
+              Shopping location
+            </label>
+            <select
+                id="shopping-location"
+                value={selectedLocation}
+                onChange={handleManualLocationChange}
+            >
               {locations.map((location) => (
                   <option key={location.id} value={location.id}>
                     {location.name} — {location.city}
@@ -187,13 +194,24 @@ export default function ProductBrowser() {
         </div>
 
         <div className="filterBar">
+          <label className="visuallyHidden" htmlFor="product-search">
+            Search products
+          </label>
           <input
+              id="product-search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, brand, or category..."
           />
 
-          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+          <label className="visuallyHidden" htmlFor="category-filter">
+            Filter by category
+          </label>
+          <select
+              id="category-filter"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+          >
             {categories.map((category) => (
                 <option key={category} value={category}>
                   {category === "All" ? "All categories" : category}
@@ -201,7 +219,14 @@ export default function ProductBrowser() {
             ))}
           </select>
 
-          <select value={brandFilter} onChange={(e) => setBrandFilter(e.target.value)}>
+          <label className="visuallyHidden" htmlFor="brand-filter">
+            Filter by brand
+          </label>
+          <select
+              id="brand-filter"
+              value={brandFilter}
+              onChange={(e) => setBrandFilter(e.target.value)}
+          >
             {brands.map((brand) => (
                 <option key={brand} value={brand}>
                   {brand === "All" ? "All brands" : brand}
@@ -209,7 +234,14 @@ export default function ProductBrowser() {
             ))}
           </select>
 
-          <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+          <label className="visuallyHidden" htmlFor="sort-products">
+            Sort products
+          </label>
+          <select
+              id="sort-products"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+          >
             <option value="default">Default sorting</option>
             <option value="price-low">Price: low to high</option>
             <option value="price-high">Price: high to low</option>
@@ -255,6 +287,7 @@ export default function ProductBrowser() {
                       <button
                           className="primaryButton fullButton"
                           onClick={() => handleAddToCart(product)}
+                          aria-label={`Add ${product.name} to cart`}
                       >
                         Add to Cart
                       </button>

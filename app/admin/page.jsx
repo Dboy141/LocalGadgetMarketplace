@@ -13,14 +13,14 @@ export default function AdminDashboardPage() {
 
     if (!stats) {
         return (
-            <main className="page">
+            <main className="page" id="main-content">
                 <p>Loading dashboard...</p>
             </main>
         );
     }
 
     return (
-        <main className="page">
+        <main className="page" id="main-content">
             <div className="pageHeader">
                 <div>
                     <p className="eyebrow">Admin</p>

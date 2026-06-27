@@ -29,7 +29,7 @@ export default function AdminLayout({ children }) {
 
     if (checking) {
         return (
-            <main className="page">
+            <main className="page" id="main-content">
                 <div className="emptyState">
                     <h2>Checking admin access...</h2>
                     <p>Please wait while we confirm your permissions.</p>

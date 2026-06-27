@@ -33,7 +33,7 @@ export default function CartPage() {
   const total = getCartTotal();
 
   return (
-    <main className="page">
+    <main className="page" id="main-content">
       <div className="pageHeader">
         <div>
           <p className="eyebrow">Your cart</p>
@@ -60,6 +60,7 @@ export default function CartPage() {
 
                 <div className="cartControls">
                   <input
+                    aria-label={`Quantity for ${item.name}`}
                     type="number"
                     min="1"
                     max={item.stock}
