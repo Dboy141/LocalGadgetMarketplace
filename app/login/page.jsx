@@ -1,12 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { loginUser } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: "", password: "" });
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const [message, setMessage] = useState("");
   const [hasError, setHasError] = useState(false);
 
@@ -28,46 +34,78 @@ export default function LoginPage() {
   }
 
   return (
-      <main className="page narrowPage" id="main-content">
-        <div className="formCard">
-          <h1>Login</h1>
-          <p className="muted">Use this test user: user@test.com / password123</p>
+      <main className="authModalPage">
+        <div className="authBackdrop">
+          <div className="authModal">
+            <div className="authModalHeader">
+              <div>
+                <p className="eyebrow">Welcome back</p>
+                <h1>Login</h1>
+              </div>
 
-          <form onSubmit={handleSubmit} className="form">
-            <label>
-              Email
-              <input
-                  className={hasError ? "inputError" : ""}
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="user@test.com"
-                  required
-              />
-            </label>
+              <Link href="/" className="modalCloseButton">
+                ×
+              </Link>
+            </div>
 
-            <label>
-              Password
-              <input
-                  className={hasError ? "inputError" : ""}
-                  type="password"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="password123"
-                  required
-              />
-            </label>
+            <p className="muted">
+              Log in to continue shopping, view your orders, or access the admin
+              dashboard.
+            </p>
 
-            <button className="primaryButton" type="submit">
-              Login
-            </button>
+            <div className="demoAccounts">
+              <p>
+                <strong>User:</strong> user@test.com / password123
+              </p>
+              <p>
+                <strong>Admin:</strong> admin@test.com / admin123
+              </p>
+            </div>
 
-            {message && (
-                <p className={hasError ? "errorMessage" : "successMessage"}>
-                  {message}
-                </p>
-            )}
-          </form>
+            <form onSubmit={handleSubmit} className="form">
+              <label>
+                Email
+                <input
+                    className={hasError ? "inputError" : ""}
+                    type="email"
+                    value={form.email}
+                    onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                    }
+                    placeholder="user@test.com"
+                    required
+                />
+              </label>
+
+              <label>
+                Password
+                <input
+                    className={hasError ? "inputError" : ""}
+                    type="password"
+                    value={form.password}
+                    onChange={(e) =>
+                        setForm({ ...form, password: e.target.value })
+                    }
+                    placeholder="password123"
+                    required
+                />
+              </label>
+
+              <button className="primaryButton fullButton" type="submit">
+                Login
+              </button>
+
+              {message && (
+                  <p className={hasError ? "errorMessage" : "successMessage"}>
+                    {message}
+                  </p>
+              )}
+            </form>
+
+            <p className="authSwitchText">
+              No account yet? <Link href="/signup">Create one</Link>
+            </p>
+          </div>
         </div>
       </main>
   );

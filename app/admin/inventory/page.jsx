@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  getInventoryRows,
-  updateInventoryRow,
-} from "@/lib/api";
+import { getInventoryRows, updateInventoryRow } from "@/lib/api";
 
 export default function AdminInventoryPage() {
   const [rows, setRows] = useState([]);
@@ -19,27 +16,38 @@ export default function AdminInventoryPage() {
 
   function handleChange(row, field, value) {
     const numericValue = Number(value);
+
     updateInventoryRow(row.productId, row.locationId, {
       [field]: numericValue,
     });
+
     refresh();
   }
 
   return (
-    <main className="page" id="main-content">
-      <div className="pageHeader">
-        <div>
-          <p className="eyebrow">Admin</p>
-          <h1>Inventory Management</h1>
+      <main className="page">
+        <div className="pageHeader">
+          <div>
+            <p className="eyebrow">Admin</p>
+            <h1>Inventory Management</h1>
+            <p className="muted">
+              Control product pricing, available stock, and low-stock warning
+              levels for each product at each location.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="tableCard">
-        <h2>Stock, Price and Threshold by Location</h2>
+        <div className="tableCard">
+          <h2>Price, Stock and Low-Stock Threshold per Product Location</h2>
 
-        <div className="responsiveTable">
-          <table>
-            <thead>
+          <p className="muted">
+            Each product can have a different price, stock quantity, and low-stock
+            threshold depending on the selected location.
+          </p>
+
+          <div className="responsiveTable">
+            <table>
+              <thead>
               <tr>
                 <th>Product</th>
                 <th>Location</th>
@@ -47,45 +55,61 @@ export default function AdminInventoryPage() {
                 <th>Stock</th>
                 <th>Low-stock threshold</th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+
+              <tbody>
               {rows.map((row) => (
-                <tr key={`${row.productId}-${row.locationId}`}>
-                  <td>{row.productName}</td>
-                  <td>{row.locationName}</td>
-                  <td>
-                    <input
-                      className="tableInput"
-                      aria-label={`Price for ${row.productName} at ${row.locationName}`}
-                      type="number"
-                      value={row.price}
-                      onChange={(e) => handleChange(row, "price", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className="tableInput"
-                      aria-label={`Stock for ${row.productName} at ${row.locationName}`}
-                      type="number"
-                      value={row.stock}
-                      onChange={(e) => handleChange(row, "stock", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className="tableInput"
-                      aria-label={`Low-stock threshold for ${row.productName} at ${row.locationName}`}
-                      type="number"
-                      value={row.lowStockThreshold}
-                      onChange={(e) => handleChange(row, "lowStockThreshold", e.target.value)}
-                    />
-                  </td>
-                </tr>
+                  <tr key={`${row.productId}-${row.locationId}`}>
+                    <td>{row.productName}</td>
+                    <td>{row.locationName}</td>
+
+                    <td>
+                      <input
+                          className="tableInput"
+                          type="number"
+                          min="0"
+                          value={row.price}
+                          onChange={(e) =>
+                              handleChange(row, "price", e.target.value)
+                          }
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                          className="tableInput"
+                          type="number"
+                          min="0"
+                          value={row.stock}
+                          onChange={(e) =>
+                              handleChange(row, "stock", e.target.value)
+                          }
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                          className="tableInput"
+                          type="number"
+                          min="0"
+                          value={row.lowStockThreshold}
+                          onChange={(e) =>
+                              handleChange(row, "lowStockThreshold", e.target.value)
+                          }
+                      />
+                    </td>
+                  </tr>
               ))}
-            </tbody>
-          </table>
+
+              {rows.length === 0 && (
+                  <tr>
+                    <td colSpan="5">No inventory rows available yet.</td>
+                  </tr>
+              )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
   );
 }

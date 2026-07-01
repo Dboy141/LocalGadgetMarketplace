@@ -5,115 +5,128 @@ import { getLowStockAlerts, resolveAlert, restockFromAlert } from "@/lib/api";
 
 export default function AdminAlertsPage() {
   const [alerts, setAlerts] = useState([]);
+  const [restockAmounts, setRestockAmounts] = useState({});
+  const [message, setMessage] = useState("");
 
   function refresh() {
-    setAlerts(getLowStockAlerts());
+    const activeAlerts = getLowStockAlerts();
+    setAlerts(activeAlerts);
   }
 
   useEffect(() => {
     refresh();
   }, []);
 
+  function handleAmountChange(alertId, value) {
+    setRestockAmounts({
+      ...restockAmounts,
+      [alertId]: value,
+    });
+  }
+
   function handleResolve(alertId) {
     resolveAlert(alertId);
+    setMessage("Alert marked as resolved.");
     refresh();
   }
 
   function handleRestock(alertId) {
-    restockFromAlert(alertId, 10);
+    const quantity = Number(restockAmounts[alertId]);
+
+    if (!quantity || quantity <= 0) {
+      setMessage("Please enter a valid restock amount.");
+      return;
+    }
+
+    restockFromAlert(alertId, quantity);
+    setRestockAmounts({
+      ...restockAmounts,
+      [alertId]: "",
+    });
+
+    setMessage(`Stock increased by ${quantity}.`);
     refresh();
   }
 
-  function getAlertSeverity(alert) {
-    if (alert.stock === 0 || alert.stock <= Math.floor(alert.lowStockThreshold / 2)) {
-      return "critical";
-    }
-
-    return "warning";
-  }
-
   return (
-    <main className="page" id="main-content">
-      <div className="pageHeader">
-        <div>
-          <p className="eyebrow">Admin</p>
-          <h1>Low-Stock Alerts</h1>
-          <p className="muted">
-            Prioritize restocks by current inventory level and store location.
-          </p>
+      <main className="page">
+        <div className="pageHeader">
+          <div>
+            <p className="eyebrow">Admin</p>
+            <h1>Low-Stock Alerts</h1>
+            <p className="muted">
+              Review products that have reached their low-stock threshold and
+              restock them with your own custom amount.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {alerts.length === 0 ? (
-        <div className="emptyState">
-          <h2>No active low-stock alerts.</h2>
-          <p>Alerts will appear here when stock reaches the threshold.</p>
-        </div>
-      ) : (
-        <div className="alertGrid">
-          {alerts.map((alert) => {
-            const severity = getAlertSeverity(alert);
-            const isCritical = severity === "critical";
+        {message && <p className="successMessage">{message}</p>}
 
-            return (
-              <article
-                className={`alertCard ${isCritical ? "alertCritical" : "alertWarning"}`}
-                key={alert.id}
-                aria-label={`${isCritical ? "Critical" : "Low-stock"} alert for ${alert.productName}`}
-              >
-                <div className="alertTop">
-                  <span className={`statusPill ${severity}`}>
-                    {isCritical ? "Critical" : "Low stock"}
-                  </span>
-                  <span className="alertTime">
-                    {new Date(alert.createdAt).toLocaleString()}
-                  </span>
-                </div>
+        {alerts.length === 0 ? (
+            <div className="emptyState">
+              <h2>No active low-stock alerts.</h2>
+              <p>Alerts will appear here when stock reaches the threshold.</p>
+            </div>
+        ) : (
+            <div className="alertGrid">
+              {alerts.map((alert) => (
+                  <div className="alertCard" key={alert.id}>
+                    <span className="statusPill warning">Low stock</span>
 
-                <div className="alertProduct">
-                  <div>
                     <h2>{alert.productName}</h2>
-                    <p>{alert.locationName}</p>
-                  </div>
 
-                  <div className="alertStock">
-                    <span>{alert.stock}</span>
-                    <small>in stock</small>
-                  </div>
-                </div>
+                    <p>
+                      <strong>Location:</strong> {alert.locationName}
+                    </p>
 
-                <dl className="alertDetails">
-                  <div>
-                    <dt>Threshold</dt>
-                    <dd>{alert.lowStockThreshold}</dd>
-                  </div>
-                  <div>
-                    <dt>Short by</dt>
-                    <dd>{Math.max(alert.lowStockThreshold - alert.stock, 0)}</dd>
-                  </div>
-                </dl>
+                    <p>
+                      <strong>Current stock:</strong> {alert.stock}
+                    </p>
 
-                <div className="buttonRow alertActions">
-                  <button
-                    className="primaryButton"
-                    onClick={() => handleRestock(alert.id)}
-                    aria-label={`Restock ${alert.productName} by 10 units`}
-                  >
-                    Restock +10
-                  </button>
-                  <button
-                    className="secondaryButton"
-                    onClick={() => handleResolve(alert.id)}
-                    aria-label={`Mark ${alert.productName} alert resolved`}
-                  >
-                    Mark Resolved
-                  </button>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      )}
-    </main>
+                    <p>
+                      <strong>Low-stock threshold:</strong>{" "}
+                      {alert.lowStockThreshold}
+                    </p>
+
+                    <p className="muted">
+                      Created: {new Date(alert.createdAt).toLocaleString()}
+                    </p>
+
+                    <div className="restockBox">
+                      <label>
+                        Restock amount
+                        <input
+                            type="number"
+                            min="1"
+                            value={restockAmounts[alert.id] || ""}
+                            onChange={(e) =>
+                                handleAmountChange(alert.id, e.target.value)
+                            }
+                            placeholder="Example: 15"
+                        />
+                      </label>
+                    </div>
+
+                    <div className="buttonRow">
+                      <button
+                          className="primaryButton"
+                          onClick={() => handleRestock(alert.id)}
+                      >
+                        Restock
+                      </button>
+
+                      <button
+                          className="secondaryButton"
+                          onClick={() => handleResolve(alert.id)}
+                      >
+                        Mark Resolved
+                      </button>
+                    </div>
+                  </div>
+              ))}
+            </div>
+        )}
+      </main>
   );
 }

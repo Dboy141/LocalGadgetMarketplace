@@ -1,5 +1,6 @@
 /* =========================================================
    GLOBAL DESIGN TOKENS
+   Main colors, radius, shadows, and container sizes.
 ========================================================= */
 
 :root {
@@ -26,32 +27,14 @@
 
   --shadow-sm: 0 8px 18px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+
   --container: 1290px;
   --admin-container: 1320px;
 }
-/* =========================================================
-   INFO PANEL
-========================================================= */
 
-.infoPanel {
-  margin-top: 1.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.infoPanel h2 {
-  margin-top: 0;
-}
-
-.infoPanel p {
-  color: var(--muted);
-  line-height: 1.7;
-}
 /* =========================================================
    BASE RESET
+   Basic reset for predictable layouts.
 ========================================================= */
 
 * {
@@ -66,7 +49,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+  "Segoe UI", sans-serif;
   line-height: 1.5;
 }
 
@@ -109,6 +93,7 @@ img {
   outline-offset: 3px;
 }
 
+/* Accessibility helper */
 .skipLink {
   position: fixed;
   left: 1rem;
@@ -126,6 +111,7 @@ img {
   transform: translateY(0);
 }
 
+/* Hide text visually but keep it available for screen readers */
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -140,6 +126,7 @@ img {
 
 /* =========================================================
    NAVBAR
+   Main top navigation for the website.
 ========================================================= */
 
 .navbar {
@@ -229,6 +216,7 @@ img {
 
 /* =========================================================
    PAGE LAYOUT
+   General page containers and headings.
 ========================================================= */
 
 .page {
@@ -288,6 +276,7 @@ img {
 
 /* =========================================================
    HERO SECTION
+   Homepage hero banner.
 ========================================================= */
 
 .hero {
@@ -320,7 +309,7 @@ img {
 
 /* =========================================================
    BUTTONS
-   Reusable buttons.
+   Reusable button styles.
 ========================================================= */
 
 .primaryButton,
@@ -375,6 +364,7 @@ img {
 
 /* =========================================================
    FORMS
+   Login, signup, checkout, and admin forms.
 ========================================================= */
 
 .formCard {
@@ -452,7 +442,95 @@ textarea {
 }
 
 /* =========================================================
+   AUTH MODAL
+   Login page styled like a centered modal.
+========================================================= */
+
+.authModalPage {
+  min-height: calc(100vh - 72px);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+          radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.1), transparent 30%),
+          var(--bg);
+}
+
+.authBackdrop {
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.authModal {
+  width: min(100%, 480px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 1.7rem;
+  box-shadow: var(--shadow-md);
+}
+
+.authModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.authModalHeader h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+.modalCloseButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.modalCloseButton:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.demoAccounts {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.demoAccounts p {
+  margin: 0.35rem 0;
+}
+
+.authSwitchText {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.authSwitchText a {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* =========================================================
    LOCATION CARD
+   User location selector and geolocation section.
 ========================================================= */
 
 .shopSection {
@@ -479,6 +557,7 @@ textarea {
 
 /* =========================================================
    FILTER BAR
+   Search, category, brand, and sort filters.
 ========================================================= */
 
 .filterBar {
@@ -506,6 +585,7 @@ textarea {
 
 /* =========================================================
    PRODUCT CARDS
+   Product grid and cards.
 ========================================================= */
 
 .productGrid {
@@ -587,7 +667,7 @@ textarea {
 }
 
 /* =========================================================
-   CART AND CHECKOUT
+   CART, CHECKOUT, AND ORDERS
 ========================================================= */
 
 .cartLayout {
@@ -608,7 +688,8 @@ textarea {
 .summaryCard,
 .tableCard,
 .alertCard,
-.statCard {
+.statCard,
+.infoPanel {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -681,7 +762,8 @@ textarea {
 
 /* =========================================================
    ADMIN LAYOUT
-   Sidebar and admin content area.
+   Laptop: left sidebar.
+   Tablet/phone: horizontal scrollable admin navbar.
 ========================================================= */
 
 .adminLayout {
@@ -691,10 +773,12 @@ textarea {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 1.5rem;
+  align-items: start;
 }
 
 .adminContent {
   min-width: 0;
+  width: 100%;
 }
 
 .adminSidebar {
@@ -706,6 +790,8 @@ textarea {
   border-radius: var(--radius-lg);
   padding: 1rem;
   box-shadow: var(--shadow-sm);
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
 }
 
 .adminSidebarHeader h2 {
@@ -728,6 +814,7 @@ textarea {
   border-radius: var(--radius-sm);
   font-weight: 800;
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .adminLink:hover {
@@ -741,9 +828,23 @@ textarea {
 }
 
 /* =========================================================
-   ADMIN TABLES
-   Tables used for inventory, products, locations and orders.
+   ADMIN TABLES, FORMS, AND CARDS
 ========================================================= */
+
+.adminTwoColumn {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: start;
+}
+
+.adminTwoColumn .formCard {
+  width: 100%;
+}
+
+.adminTwoColumn .tableCard {
+  min-width: 0;
+}
 
 .responsiveTable {
   width: 100%;
@@ -772,13 +873,6 @@ th {
 
 .tableInput {
   min-width: 110px;
-}
-
-.adminTwoColumn {
-  display: grid;
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
-  gap: 1.4rem;
-  align-items: start;
 }
 
 .alertGrid {
@@ -903,6 +997,17 @@ th {
   margin-top: auto;
 }
 
+/* Custom restock input on alert cards */
+.restockBox {
+  margin: 1rem 0;
+}
+
+.restockBox label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 800;
+}
+
 .statGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -921,7 +1026,26 @@ th {
 }
 
 /* =========================================================
+   INFO PANEL
+   Small explanation panel used on dashboard.
+========================================================= */
+
+.infoPanel {
+  margin-top: 1.5rem;
+}
+
+.infoPanel h2 {
+  margin-top: 0;
+}
+
+.infoPanel p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* =========================================================
    EMPTY STATES
+   Used when there are no products, orders, alerts, etc.
 ========================================================= */
 
 .emptyState {
@@ -949,6 +1073,7 @@ th {
 
 /* =========================================================
    TOAST NOTIFICATION
+   Replaces browser alert().
 ========================================================= */
 
 .toast {
@@ -988,6 +1113,7 @@ th {
 
 /* =========================================================
    TABLET RESPONSIVENESS
+   Screens up to 1024px.
 ========================================================= */
 
 @media (max-width: 1024px) {
@@ -1012,27 +1138,96 @@ th {
     grid-template-columns: 1fr;
   }
 
+  /* Admin changes from sidebar to horizontal mini-navbar */
   .adminLayout {
+    width: min(100% - 1rem, var(--admin-container));
     grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-top: 1rem;
   }
 
   .adminSidebar {
-    position: static;
+    position: sticky;
+    top: 74px;
+    z-index: 80;
+    max-height: none;
+    overflow: hidden;
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .adminSidebarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .adminSidebarHeader h2 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .adminSidebarHeader p {
+    margin: 0;
+    font-size: 0.85rem;
   }
 
   .adminSidebarLinks {
     display: flex;
+    flex-wrap: nowrap;
+    gap: 0.55rem;
+    margin-top: 0;
     overflow-x: auto;
-    padding-bottom: 0.4rem;
+    overflow-y: hidden;
+    padding-bottom: 0.35rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .adminSidebarLinks::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .adminSidebarLinks::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 999px;
+  }
+
+  .adminSidebarLinks::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
   }
 
   .adminLink {
+    flex: 0 0 auto;
     white-space: nowrap;
+    scroll-snap-align: start;
+    padding: 0.75rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: white;
+    font-size: 0.9rem;
+  }
+
+  .activeAdminLink {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: white;
+  }
+
+  .adminContent .page {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
 /* =========================================================
    MOBILE RESPONSIVENESS
+   Screens up to 768px.
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -1146,6 +1341,31 @@ th {
     padding-top: 1rem;
   }
 
+  .adminSidebar {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .adminSidebarHeader {
+    margin-bottom: 0.8rem;
+  }
+
+  .adminSidebarHeader h2 {
+    font-size: 1.1rem;
+  }
+
+  .adminSidebarHeader p {
+    font-size: 0.9rem;
+  }
+
+  .adminTwoColumn {
+    gap: 1rem;
+  }
+
+  .adminTwoColumn .formCard {
+    padding: 1rem;
+  }
+
   .formCard,
   .tableCard,
   .cartItem,
@@ -1153,12 +1373,25 @@ th {
   .summaryCard,
   .alertCard,
   .statCard,
-  .locationCard {
+  .locationCard,
+  .infoPanel {
     padding: 1.1rem;
   }
 
   .summaryCard {
     position: static;
+  }
+
+  .responsiveTable {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 680px;
+  }
+
+  .restockBox input {
+    width: 100%;
   }
 
   .toast {
@@ -1170,7 +1403,47 @@ th {
 }
 
 /* =========================================================
+   SMALL PHONE RESPONSIVENESS
+   Screens up to 520px.
+========================================================= */
+
+@media (max-width: 520px) {
+  .authModalPage {
+    padding: 1rem;
+    align-items: start;
+  }
+
+  .authModal {
+    border-radius: 22px;
+    padding: 1.2rem;
+  }
+
+  .authModalHeader h1 {
+    font-size: 1.7rem;
+  }
+
+  .adminSidebar {
+    top: 72px;
+    padding: 0.75rem;
+  }
+
+  .adminSidebarHeader {
+    margin-bottom: 0.6rem;
+  }
+
+  .adminSidebarHeader p {
+    display: none;
+  }
+
+  .adminLink {
+    font-size: 0.85rem;
+    padding: 0.7rem 0.85rem;
+  }
+}
+
+/* =========================================================
    VERY SMALL PHONES
+   Screens up to 420px.
 ========================================================= */
 
 @media (max-width: 420px) {
@@ -1192,5 +1465,133 @@ th {
 
   .buttonRow button {
     width: 100%;
+  }
+}
+
+
+
+
+
+
+/* =========================================================
+   REAL LOGIN MODAL
+   This is the actual pop-up modal over the current page.
+========================================================= */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.loginModal {
+  width: min(100%, 480px);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.7rem;
+  box-shadow: var(--shadow-md);
+  animation: modalPop 0.18s ease;
+}
+
+.loginModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.loginModalHeader h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+.modalCloseButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modalCloseButton:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.plainNavButton {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  min-height: 40px;
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.75rem;
+  font-weight: 650;
+}
+
+.plainNavButton:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.demoAccounts {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.demoAccounts p {
+  margin: 0.35rem 0;
+}
+
+.authSwitchText {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.authSwitchText a {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .loginModal {
+    border-radius: 18px;
+    padding: 1.2rem;
+  }
+
+  .loginModalHeader h1 {
+    font-size: 1.7rem;
   }
 }
