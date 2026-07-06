@@ -18,21 +18,24 @@ export default function AdminSidebar() {
     return (
         <aside className="adminSidebar">
             <div className="adminSidebarHeader">
-                <h2>Admin Panel</h2>
-                <p>Manage store data</p>
+                <h2>Admin</h2>
+                <p>Manage store</p>
             </div>
 
             <nav className="adminSidebarLinks" aria-label="Admin navigation">
-                {links.map((link) => (
-                    <Link
-                        key={link.href}
-                        href={link.href}
-                        className={pathname === link.href ? "adminLink activeAdminLink" : "adminLink"}
-                        aria-current={pathname === link.href ? "page" : undefined}
-                    >
-                        {link.label}
-                    </Link>
-                ))}
+                {links.map((link) => {
+                    const isActive = pathname === link.href;
+
+                    return (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={isActive ? "adminLink activeAdminLink" : "adminLink"}
+                        >
+                            {link.label}
+                        </Link>
+                    );
+                })}
             </nav>
         </aside>
     );

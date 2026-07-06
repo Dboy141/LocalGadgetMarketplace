@@ -3,18 +3,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCartItems, getCurrentUser, logoutUser } from "@/lib/api";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import LoginModal from "@/components/LoginModal";
 
 export default function Navbar() {
   const router = useRouter();
-  const pathname = usePathname();
+
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  function getCurrentPage(href) {
-    return pathname === href ? "page" : undefined;
-  }
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   function refreshNavbar() {
     const cartItems = getCartItems();
@@ -36,37 +34,24 @@ export default function Navbar() {
     };
   }, []);
 
+  function openLoginModal() {
+    setMenuOpen(false);
+    setLoginModalOpen(true);
+  }
+
   function handleLogout() {
     logoutUser();
     window.dispatchEvent(new Event("authChanged"));
     setMenuOpen(false);
-    router.push("/login");
+    router.push("/");
   }
 
   return (
-      <header className="navbar">
-        <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
-          <span className="brandLogo">LG</span>
-          <span>LocalGadget</span>
-        </Link>
-
-        <button
-            className="mobileMenuButton"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle navigation menu"
-            aria-expanded={menuOpen}
-            aria-controls="primary-navigation"
-        >
-          ☰
-        </button>
-
-        <nav
-            className={`navLinks ${menuOpen ? "navLinksOpen" : ""}`}
-            id="primary-navigation"
-            aria-label="Primary navigation"
-        >
-          <Link href="/" onClick={() => setMenuOpen(false)} aria-current={getCurrentPage("/")}>
-            Shop
+      <>
+        <header className="navbar">
+          <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
+            <span className="brandLogo">LG</span>
+            <span>LocalGadget</span>
           </Link>
 
           {user && (
@@ -96,8 +81,8 @@ export default function Navbar() {
               aria-current={getCurrentPage("/cart")}
               aria-label={`Cart with ${cartCount} items`}
           >
-            Cart ({cartCount})
-          </Link>
+            ☰
+          </button>
 
           {user ? (
               <>
