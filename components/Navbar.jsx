@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCartItems, getCurrentUser, logoutUser } from "@/lib/api";
-import { useRouter } from "next/navigation";
-import LoginModal from "@/components/LoginModal";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
-
+  const pathname = usePathname();
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+  function getCurrentPage(href) {
+    return pathname === href ? "page" : undefined;
+  }
 
   function refreshNavbar() {
     const cartItems = getCartItems();
@@ -34,11 +36,6 @@ export default function Navbar() {
     };
   }, []);
 
-  function openLoginModal() {
-    setMenuOpen(false);
-    setLoginModalOpen(true);
-  }
-
   function handleLogout() {
     logoutUser();
     window.dispatchEvent(new Event("authChanged"));
@@ -47,61 +44,79 @@ export default function Navbar() {
   }
 
   return (
-      <>
-        <header className="navbar">
-          <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
-            <span className="brandLogo">LG</span>
-            <span>LocalGadget</span>
-          </Link>
+    <header className="navbar">
+      <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
+        <span className="brandLogo">LG</span>
+        <span>LocalGadget</span>
+      </Link>
 
-          {user && (
-              <Link
-                  href="/tracking"
-                  onClick={() => setMenuOpen(false)}
-                  aria-current={getCurrentPage("/tracking")}
-              >
-                Track order
-              </Link>
-          )}
+      <button
+        className="mobileMenuButton"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle navigation menu"
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+      >
+        ☰
+      </button>
 
-          {user?.role === "admin" && (
-              <Link
-                  href="/admin"
-                  onClick={() => setMenuOpen(false)}
-                  aria-current={pathname.startsWith("/admin") ? "page" : undefined}
-              >
-                Admin
-              </Link>
-          )}
+      <nav
+        className={`navLinks ${menuOpen ? "navLinksOpen" : ""}`}
+        id="primary-navigation"
+        aria-label="Primary navigation"
+      >
+        <Link href="/" onClick={() => setMenuOpen(false)} aria-current={getCurrentPage("/")}>
+          Shop
+        </Link>
 
+        {user && (
           <Link
-              href="/cart"
-              className="cartLink"
-              onClick={() => setMenuOpen(false)}
-              aria-current={getCurrentPage("/cart")}
-              aria-label={`Cart with ${cartCount} items`}
+            href="/tracking"
+            onClick={() => setMenuOpen(false)}
+            aria-current={getCurrentPage("/tracking")}
           >
-            ☰
-          </button>
+            Track order
+          </Link>
+        )}
 
-          {user ? (
-              <>
-                <span className="userBadge">Hi, {user.fullName.split(" ")[0]}</span>
-                <button className="navButton" onClick={handleLogout}>
-                  Logout
-                </button>
-              </>
-          ) : (
-              <Link
-                  href="/login"
-                  className="navButton"
-                  onClick={() => setMenuOpen(false)}
-                  aria-current={pathname.startsWith("/login") ? "page" : undefined}
-              >
-                Sign in
-              </Link>
-          )}
-        </nav>
-      </header>
+        {user?.role === "admin" && (
+          <Link
+            href="/admin"
+            onClick={() => setMenuOpen(false)}
+            aria-current={pathname.startsWith("/admin") ? "page" : undefined}
+          >
+            Admin
+          </Link>
+        )}
+
+        <Link
+          href="/cart"
+          className="cartLink"
+          onClick={() => setMenuOpen(false)}
+          aria-current={getCurrentPage("/cart")}
+          aria-label={`Cart with ${cartCount} items`}
+        >
+          Cart ({cartCount})
+        </Link>
+
+        {user ? (
+          <>
+            <span className="userBadge">Hi, {user.fullName.split(" ")[0]}</span>
+            <button className="navButton" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="navButton"
+            onClick={() => setMenuOpen(false)}
+            aria-current={pathname.startsWith("/login") ? "page" : undefined}
+          >
+            Sign in
+          </Link>
+        )}
+      </nav>
+    </header>
   );
 }
