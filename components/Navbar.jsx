@@ -54,66 +54,54 @@ export default function Navbar() {
             <span>LocalGadget</span>
           </Link>
 
-          <button
-              className="mobileMenuButton"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle navigation menu"
+          {user && (
+              <Link
+                  href="/tracking"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={getCurrentPage("/tracking")}
+              >
+                Track order
+              </Link>
+          )}
+
+          {user?.role === "admin" && (
+              <Link
+                  href="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={pathname.startsWith("/admin") ? "page" : undefined}
+              >
+                Admin
+              </Link>
+          )}
+
+          <Link
+              href="/cart"
+              className="cartLink"
+              onClick={() => setMenuOpen(false)}
+              aria-current={getCurrentPage("/cart")}
+              aria-label={`Cart with ${cartCount} items`}
           >
             ☰
           </button>
 
-          <nav className={`navLinks ${menuOpen ? "navLinksOpen" : ""}`}>
-            <Link href="/" onClick={() => setMenuOpen(false)}>
-              Shop
-            </Link>
-
-            {user && (
-                <Link href="/orders" onClick={() => setMenuOpen(false)}>
-                  Orders
-                </Link>
-            )}
-
-            {user?.role === "admin" && (
-                <Link href="/admin" onClick={() => setMenuOpen(false)}>
-                  Admin
-                </Link>
-            )}
-
-            <Link href="/cart" className="cartLink" onClick={() => setMenuOpen(false)}>
-              Cart ({cartCount})
-            </Link>
-
-            {user ? (
-                <>
-                  <span className="userBadge">Hi, {user.fullName.split(" ")[0]}</span>
-
-                  <button className="navButton" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </>
-            ) : (
-                <>
-                  <button className="plainNavButton" onClick={openLoginModal}>
-                    Login
-                  </button>
-
-                  <Link
-                      href="/signup"
-                      className="navButton"
-                      onClick={() => setMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </>
-            )}
-          </nav>
-        </header>
-
-        <LoginModal
-            isOpen={loginModalOpen}
-            onClose={() => setLoginModalOpen(false)}
-            onLoginSuccess={refreshNavbar}
-        />
-      </>
+          {user ? (
+              <>
+                <span className="userBadge">Hi, {user.fullName.split(" ")[0]}</span>
+                <button className="navButton" onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+          ) : (
+              <Link
+                  href="/login"
+                  className="navButton"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={pathname.startsWith("/login") ? "page" : undefined}
+              >
+                Sign in
+              </Link>
+          )}
+        </nav>
+      </header>
   );
 }

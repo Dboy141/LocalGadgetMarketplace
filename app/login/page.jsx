@@ -1,25 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { loginUser } from "@/lib/api";
+import { useEffect, useState } from "react";
+import {
+  getCurrentUser,
+  requestPhoneOtp,
+  signInWithGoogle,
+  verifyPhoneOtp,
+} from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [phone, setPhone] = useState("+36 20 123 4567");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [existingUser, setExistingUser] = useState(null);
 
-  function handleSubmit(e) {
+  useEffect(() => {
+    setExistingUser(getCurrentUser());
+  }, []);
+
+  function handleGoogleSignIn() {
+    signInWithGoogle();
+    setHasError(false);
+    setMessage("Signed in with Google.");
+    window.dispatchEvent(new Event("authChanged"));
+    router.push("/");
+  }
+
+  function handleRequestOtp(e) {
     e.preventDefault();
 
-    const result = loginUser(form.email, form.password);
+    const result = requestPhoneOtp(phone);
 
     if (!result.success) {
       setHasError(true);
@@ -28,85 +43,106 @@ export default function LoginPage() {
     }
 
     setHasError(false);
-    setMessage("Login successful.");
+    setMessage(result.message);
+    setOtpSent(true);
+  }
+
+  function handleVerifyOtp(e) {
+    e.preventDefault();
+
+    const result = verifyPhoneOtp(phone, otp);
+
+    if (!result.success) {
+      setHasError(true);
+      setMessage(result.message);
+      return;
+    }
+
+    setHasError(false);
+    setMessage("Phone verified.");
     window.dispatchEvent(new Event("authChanged"));
     router.push("/");
   }
 
-  return (
-      <main className="authModalPage">
-        <div className="authBackdrop">
-          <div className="authModal">
-            <div className="authModalHeader">
-              <div>
-                <p className="eyebrow">Welcome back</p>
-                <h1>Login</h1>
-              </div>
-
-              <Link href="/" className="modalCloseButton">
-                ×
-              </Link>
-            </div>
-
-            <p className="muted">
-              Log in to continue shopping, view your orders, or access the admin
-              dashboard.
-            </p>
-
-            <div className="demoAccounts">
-              <p>
-                <strong>User:</strong> user@test.com / password123
-              </p>
-              <p>
-                <strong>Admin:</strong> admin@test.com / admin123
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="form">
-              <label>
-                Email
-                <input
-                    className={hasError ? "inputError" : ""}
-                    type="email"
-                    value={form.email}
-                    onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                    }
-                    placeholder="user@test.com"
-                    required
-                />
-              </label>
-
-              <label>
-                Password
-                <input
-                    className={hasError ? "inputError" : ""}
-                    type="password"
-                    value={form.password}
-                    onChange={(e) =>
-                        setForm({ ...form, password: e.target.value })
-                    }
-                    placeholder="password123"
-                    required
-                />
-              </label>
-
-              <button className="primaryButton fullButton" type="submit">
-                Login
-              </button>
-
-              {message && (
-                  <p className={hasError ? "errorMessage" : "successMessage"}>
-                    {message}
-                  </p>
-              )}
-            </form>
-
-            <p className="authSwitchText">
-              No account yet? <Link href="/signup">Create one</Link>
-            </p>
+  if (existingUser) {
+    return (
+      <main className="page narrowPage" id="main-content">
+        <div className="formCard authCard">
+          <p className="eyebrow">Account access</p>
+          <h1>You are signed in</h1>
+          <p className="muted">
+            {existingUser.fullName} is already connected to this session.
+          </p>
+          <div className="buttonRow">
+            <Link href="/tracking" className="primaryButton">
+              Track orders
+            </Link>
+            <Link href="/" className="secondaryButton">
+              Continue Shopping
+            </Link>
           </div>
         </div>
       </main>
+    );
+  }
+
+  return (
+    <main className="page narrowPage" id="main-content">
+      <div className="formCard authCard">
+        <p className="eyebrow">Account access</p>
+        <h1>Sign in</h1>
+        <p className="muted">
+          Use your phone number or Google. New accounts are created automatically
+          after verification.
+        </p>
+
+        <form onSubmit={otpSent ? handleVerifyOtp : handleRequestOtp} className="form">
+          <label>
+            Phone number
+            <input
+              className={hasError ? "inputError" : ""}
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+36 20 123 4567"
+              required
+            />
+          </label>
+
+          {otpSent && (
+            <label>
+              Verification code
+              <input
+                className={hasError ? "inputError" : ""}
+                inputMode="numeric"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="123456"
+                required
+              />
+            </label>
+          )}
+
+          <button className="primaryButton fullButton" type="submit">
+            {otpSent ? "Verify and continue" : "Send verification code"}
+          </button>
+        </form>
+
+        <button
+          className="googleButton fullButton"
+          type="button"
+          onClick={handleGoogleSignIn}
+        >
+          <span className="googleMark" aria-hidden="true">G</span>
+          Continue with Google
+        </button>
+
+        {message && (
+          <p className={hasError ? "errorMessage" : "successMessage"}>
+            {message}
+          </p>
+        )}
+      </div>
+    </main>
   );
 }

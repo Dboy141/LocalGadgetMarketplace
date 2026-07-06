@@ -441,6 +441,71 @@ textarea {
   font-weight: 800;
 }
 
+.authCard {
+  margin-top: clamp(1rem, 5vw, 3rem);
+}
+
+.authCard .googleButton {
+  margin-top: 1rem;
+}
+
+.googleButton {
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--text);
+  font-weight: 850;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.googleButton:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.googleMark {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  background: conic-gradient(
+    from -45deg,
+    #4285f4 0 25%,
+    #34a853 0 50%,
+    #fbbc05 0 75%,
+    #ea4335 0
+  );
+  color: white;
+  font-weight: 950;
+  font-size: 0.9rem;
+}
+
+.authDivider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.authDivider::before,
+.authDivider::after {
+  content: "";
+  height: 1px;
+  background: var(--border);
+  flex: 1;
+}
+
 /* =========================================================
    AUTH MODAL
    Login page styled like a centered modal.
@@ -734,6 +799,33 @@ textarea {
   font-weight: 900;
 }
 
+.checkoutGooglePrompt,
+.signedInCheckout {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+}
+
+.checkoutGooglePrompt p,
+.signedInCheckout p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.signedInCheckout {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.signedInCheckout strong {
+  display: block;
+}
+
 .orderTop {
   display: flex;
   align-items: center;
@@ -758,6 +850,82 @@ textarea {
 .statusPill.critical {
   color: var(--danger);
   background: var(--danger-soft);
+}
+
+/* =========================================================
+   ORDER TRACKING
+========================================================= */
+
+.trackingLayout {
+  display: grid;
+  gap: 1rem;
+}
+
+.trackingHero,
+.trackingCard,
+.trackingOrderRow {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.trackingHero,
+.trackingOrderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.trackingHero h2,
+.trackingCard h2 {
+  margin: 0 0 0.5rem;
+}
+
+.trackingSteps {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.trackingSteps li {
+  min-height: 96px;
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.trackingSteps li span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+}
+
+.trackingSteps li.complete,
+.trackingSteps li.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.trackingSteps li.complete span,
+.trackingSteps li.active span {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.trackingOrderRow p {
+  margin: 0.25rem 0 0;
 }
 
 /* =========================================================
@@ -1315,6 +1483,16 @@ th {
   .orderTop {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .trackingHero,
+  .trackingOrderRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .trackingSteps {
+    grid-template-columns: 1fr;
   }
 
   .alertTop,

@@ -20,7 +20,7 @@ export default function OrdersPage() {
             <h2>Please log in to view your orders.</h2>
             <p>Your order history is connected to your account.</p>
             <Link href="/login" className="primaryButton">
-              Login
+              Sign in
             </Link>
           </div>
         </main>
@@ -35,6 +35,9 @@ export default function OrdersPage() {
             <h1>Order History</h1>
             <p className="muted">Showing orders for {user.fullName}.</p>
           </div>
+          <Link href="/tracking" className="secondaryButton">
+            Track Latest Order
+          </Link>
         </div>
 
         {orders.length === 0 ? (
@@ -59,7 +62,8 @@ export default function OrdersPage() {
                       <strong>Customer:</strong> {order.customer.fullName}
                     </p>
                     <p>
-                      <strong>Contact:</strong> {order.customer.email} / {order.customer.phone}
+                      <strong>Contact:</strong> {order.customer.email}
+                      {order.customer.phone ? ` / ${order.customer.phone}` : ""}
                     </p>
                     <p>
                       <strong>Total:</strong>{" "}

@@ -1,40 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCartItems, getCartTotal, getCurrentUser, placeOrder } from "@/lib/api";
+import {
+  getCartItems,
+  getCartTotal,
+  getCurrentUser,
+  placeOrder,
+  signInWithGoogle,
+} from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const router = useRouter();
 
   const [cart, setCart] = useState([]);
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-  });
-
   const [message, setMessage] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     setCart(getCartItems());
 
     const user = getCurrentUser();
-
-    if (user) {
-      setForm((prev) => ({
-        ...prev,
-        fullName: user.fullName,
-        email: user.email,
-      }));
-    }
+    setCurrentUser(user);
   }, []);
+
+  function handleGoogleSignIn() {
+    const result = signInWithGoogle();
+    setCurrentUser(result.user);
+    setHasError(false);
+    setMessage("");
+    window.dispatchEvent(new Event("authChanged"));
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    const result = placeOrder(form);
+    if (!currentUser) {
+      setHasError(true);
+      setMessage("Continue with Google so we can save and track this order.");
+      return;
+    }
+
+    const result = placeOrder();
 
     if (!result.success) {
       setHasError(true);
@@ -45,7 +53,7 @@ export default function CheckoutPage() {
     setHasError(false);
     setMessage("Order placed successfully.");
     window.dispatchEvent(new Event("cartUpdated"));
-    router.push("/orders");
+    router.push("/tracking");
   }
 
   return (
@@ -55,8 +63,9 @@ export default function CheckoutPage() {
           <h1>Checkout</h1>
 
           <p className="muted">
-            We will use these contact details to reach you when your order is ready
-            for pickup.
+            {currentUser
+                ? "You are signed in, so your saved account details will be used for this order."
+                : "Continue with Google so we can attach the order to you and save it to your tracking page."}
           </p>
 
           {cart.length === 0 ? (
@@ -88,41 +97,40 @@ export default function CheckoutPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="form">
-                  <label>
-                    Full name
-                    <input
-                        className={hasError ? "inputError" : ""}
-                        value={form.fullName}
-                        onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                        required
-                    />
-                  </label>
+                  {!currentUser && (
+                      <div className="checkoutGooglePrompt">
+                        <p>
+                          Continue with Google so we can save this order to your history.
+                        </p>
+                        <button
+                            className="googleButton fullButton"
+                            type="button"
+                            onClick={handleGoogleSignIn}
+                        >
+                          <span className="googleMark" aria-hidden="true">G</span>
+                          Continue with Google
+                        </button>
+                      </div>
+                  )}
 
-                  <label>
-                    Email
-                    <input
-                        className={hasError ? "inputError" : ""}
-                        type="email"
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        required
-                    />
-                  </label>
+                  {currentUser && (
+                      <>
+                        <div className="signedInCheckout">
+                          <span className="googleMark" aria-hidden="true">G</span>
+                          <div>
+                            <strong>{currentUser.fullName}</strong>
+                            <p>
+                              {currentUser.email}
+                              {currentUser.phone ? ` / ${currentUser.phone}` : ""}
+                            </p>
+                          </div>
+                        </div>
 
-                  <label>
-                    Phone
-                    <input
-                        className={hasError ? "inputError" : ""}
-                        value={form.phone}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        placeholder="+36..."
-                        required
-                    />
-                  </label>
-
-                  <button className="primaryButton" type="submit">
-                    Place Order
-                  </button>
+                        <button className="primaryButton" type="submit">
+                          Place Order
+                        </button>
+                      </>
+                  )}
 
                   {message && (
                       <p className={hasError ? "errorMessage" : "successMessage"}>
