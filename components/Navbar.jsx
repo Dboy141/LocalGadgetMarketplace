@@ -71,11 +71,11 @@ export default function Navbar() {
 
           {user && (
               <Link
-                  href="/orders"
+                  href="/tracking"
                   onClick={() => setMenuOpen(false)}
-                  aria-current={getCurrentPage("/orders")}
+                  aria-current={getCurrentPage("/tracking")}
               >
-                Orders
+                Track order
               </Link>
           )}
 
@@ -107,23 +107,14 @@ export default function Navbar() {
                 </button>
               </>
           ) : (
-              <>
-                <Link
-                    href="/login"
-                    onClick={() => setMenuOpen(false)}
-                    aria-current={getCurrentPage("/login")}
-                >
-                  Login
-                </Link>
-                <Link
-                    href="/signup"
-                    className="navButton"
-                    onClick={() => setMenuOpen(false)}
-                    aria-current={getCurrentPage("/signup")}
-                >
-                  Sign Up
-                </Link>
-              </>
+              <Link
+                  href="/login"
+                  className="navButton"
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={pathname.startsWith("/login") ? "page" : undefined}
+              >
+                Sign in
+              </Link>
           )}
         </nav>
       </header>
