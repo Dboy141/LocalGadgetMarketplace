@@ -11,9 +11,9 @@ export default function AdminProductsPage() {
     category: "",
     brand: "",
     description: "",
+    imageName: "",
+    imagePreview: "",
   });
-  const [message, setMessage] = useState("");
-  const [hasError, setHasError] = useState(false);
 
   function refresh() {
     setProducts(getProducts());
@@ -23,26 +23,46 @@ export default function AdminProductsPage() {
     refresh();
   }, []);
 
+  function handleImageChange(e) {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+
+    setForm({
+      ...form,
+      imageName: file.name,
+      imagePreview: previewUrl,
+    });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
-    const result = addProduct(form);
+    addProduct({
+      name: form.name,
+      category: form.category,
+      brand: form.brand,
+      description: form.description,
 
-    if (!result.success) {
-      setHasError(true);
-      setMessage(result.message);
-      return;
-    }
+      // Design-only for now.
+      // Later, this will become the real uploaded image URL from Supabase/backend.
+      imageName: form.imageName,
+      imageUrl: form.imagePreview,
+    });
 
     setForm({
       name: "",
       category: "",
       brand: "",
       description: "",
+      imageName: "",
+      imagePreview: "",
     });
 
-    setHasError(false);
-    setMessage(result.message);
     refresh();
   }
 
@@ -52,13 +72,13 @@ export default function AdminProductsPage() {
   }
 
   return (
-      <main className="page" id="main-content">
+      <main className="page">
         <div className="pageHeader">
           <div>
             <p className="eyebrow">Admin</p>
             <h1>Products</h1>
             <p className="muted">
-              Add and manage the gadgets that appear in the store.
+              Add and manage the gadgets that appear in the marketplace.
             </p>
           </div>
         </div>
@@ -69,12 +89,41 @@ export default function AdminProductsPage() {
 
             <form onSubmit={handleSubmit} className="form">
               <label>
+                Product image
+                <div className="imagePicker">
+                  {form.imagePreview ? (
+                      <img
+                          src={form.imagePreview}
+                          alt="Selected product preview"
+                          className="imagePreview"
+                      />
+                  ) : (
+                      <div className="imagePlaceholder">
+                        <span>Choose image</span>
+                        <small>PNG, JPG or WEBP</small>
+                      </div>
+                  )}
+
+                  <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleImageChange}
+                  />
+                </div>
+
+                {form.imageName && (
+                    <p className="muted selectedImageName">
+                      Selected: {form.imageName}
+                    </p>
+                )}
+              </label>
+
+              <label>
                 Name
                 <input
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Samsung Galaxy A55"
-                    minLength={2}
                     required
                 />
               </label>
@@ -85,7 +134,6 @@ export default function AdminProductsPage() {
                     value={form.brand}
                     onChange={(e) => setForm({ ...form, brand: e.target.value })}
                     placeholder="Samsung"
-                    minLength={2}
                     required
                 />
               </label>
@@ -94,9 +142,10 @@ export default function AdminProductsPage() {
                 Category
                 <input
                     value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    onChange={(e) =>
+                        setForm({ ...form, category: e.target.value })
+                    }
                     placeholder="Smartphone"
-                    minLength={2}
                     required
                 />
               </label>
@@ -109,7 +158,6 @@ export default function AdminProductsPage() {
                         setForm({ ...form, description: e.target.value })
                     }
                     placeholder="Short product description..."
-                    minLength={8}
                     required
                 />
               </label>
@@ -117,12 +165,6 @@ export default function AdminProductsPage() {
               <button className="primaryButton" type="submit">
                 Add Product
               </button>
-
-              {message && (
-                  <p className={hasError ? "errorMessage" : "successMessage"}>
-                    {message}
-                  </p>
-              )}
             </form>
           </div>
 
@@ -133,6 +175,7 @@ export default function AdminProductsPage() {
               <table>
                 <thead>
                 <tr>
+                  <th>Image</th>
                   <th>Name</th>
                   <th>Brand</th>
                   <th>Category</th>
@@ -143,6 +186,19 @@ export default function AdminProductsPage() {
                 <tbody>
                 {products.map((product) => (
                     <tr key={product.id}>
+                      <td>
+                        {product.imageUrl ? (
+                            <img
+                                src={product.imageUrl}
+                                alt={product.name}
+                                className="tableProductImage"
+                            />
+                        ) : (
+                            <div className="tableProductFallback">
+                              {product.brand?.slice(0, 2).toUpperCase() || "PR"}
+                            </div>
+                        )}
+                      </td>
                       <td>{product.name}</td>
                       <td>{product.brand}</td>
                       <td>{product.category}</td>
@@ -150,7 +206,6 @@ export default function AdminProductsPage() {
                         <button
                             className="dangerButton"
                             onClick={() => handleDelete(product.id)}
-                            aria-label={`Delete ${product.name}`}
                         >
                           Delete
                         </button>
@@ -160,12 +215,17 @@ export default function AdminProductsPage() {
 
                 {products.length === 0 && (
                     <tr>
-                      <td colSpan="4">No products available yet.</td>
+                      <td colSpan="5">No products available yet.</td>
                     </tr>
                 )}
                 </tbody>
               </table>
             </div>
+
+            <p className="muted">
+              Image selection is currently for UI demonstration. Real upload will
+              be connected when the backend/storage is implemented.
+            </p>
           </div>
         </div>
       </main>
