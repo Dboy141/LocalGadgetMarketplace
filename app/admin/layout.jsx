@@ -11,6 +11,7 @@ export default function AdminLayout({ children }) {
     const [allowed, setAllowed] = useState(false);
 
     useEffect(() => {
+        function checkAccess() {
         const user = getCurrentUser();
 
         if (!user) {
@@ -25,6 +26,14 @@ export default function AdminLayout({ children }) {
 
         setAllowed(true);
         setChecking(false);
+        }
+
+        checkAccess();
+        window.addEventListener("authChanged", checkAccess);
+
+        return () => {
+            window.removeEventListener("authChanged", checkAccess);
+        };
     }, [router]);
 
     if (checking) {

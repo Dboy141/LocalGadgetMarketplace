@@ -5,6 +5,8 @@ import { getInventoryRows, updateInventoryRow } from "@/lib/api";
 
 export default function AdminInventoryPage() {
   const [rows, setRows] = useState([]);
+  const [message, setMessage] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   function refresh() {
     setRows(getInventoryRows());
@@ -17,10 +19,18 @@ export default function AdminInventoryPage() {
   function handleChange(row, field, value) {
     const numericValue = Number(value);
 
-    updateInventoryRow(row.productId, row.locationId, {
+    const result = updateInventoryRow(row.productId, row.locationId, {
       [field]: numericValue,
     });
 
+    if (!result.success) {
+      setHasError(true);
+      setMessage(result.message);
+      return;
+    }
+
+    setHasError(false);
+    setMessage("");
     refresh();
   }
 
@@ -39,6 +49,12 @@ export default function AdminInventoryPage() {
 
         <div className="tableCard">
           <h2>Price, Stock and Low-Stock Threshold per Product Location</h2>
+
+          {message && (
+              <p className={hasError ? "errorMessage" : "successMessage"}>
+                {message}
+              </p>
+          )}
 
           <p className="muted">
             Each product can have a different price, stock quantity, and low-stock
@@ -68,6 +84,7 @@ export default function AdminInventoryPage() {
                           className="tableInput"
                           type="number"
                           min="0"
+                          step="0.01"
                           value={row.price}
                           onChange={(e) =>
                               handleChange(row, "price", e.target.value)
@@ -80,6 +97,7 @@ export default function AdminInventoryPage() {
                           className="tableInput"
                           type="number"
                           min="0"
+                          step="1"
                           value={row.stock}
                           onChange={(e) =>
                               handleChange(row, "stock", e.target.value)
@@ -92,6 +110,7 @@ export default function AdminInventoryPage() {
                           className="tableInput"
                           type="number"
                           min="0"
+                          step="1"
                           value={row.lowStockThreshold}
                           onChange={(e) =>
                               handleChange(row, "lowStockThreshold", e.target.value)

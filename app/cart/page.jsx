@@ -11,6 +11,7 @@ import {
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
+  const [message, setMessage] = useState("");
 
   function refresh() {
     setCart(getCartItems());
@@ -21,7 +22,14 @@ export default function CartPage() {
   }, []);
 
   function handleQuantityChange(productId, locationId, quantity) {
-    updateCartQuantity(productId, locationId, Number(quantity));
+    const result = updateCartQuantity(productId, locationId, Number(quantity));
+
+    if (!result.success) {
+      setMessage(result.message);
+      return;
+    }
+
+    setMessage("");
     refresh();
   }
 
@@ -50,6 +58,8 @@ export default function CartPage() {
       ) : (
         <div className="cartLayout">
           <div className="cartList">
+            {message && <p className="errorMessage">{message}</p>}
+
             {cart.map((item) => (
               <div className="cartItem" key={`${item.productId}-${item.locationId}`}>
                 <div>
@@ -64,6 +74,7 @@ export default function CartPage() {
                     type="number"
                     min="1"
                     max={item.stock}
+                    step="1"
                     value={item.quantity}
                     onChange={(e) =>
                       handleQuantityChange(item.productId, item.locationId, e.target.value)

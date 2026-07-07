@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getOrders, updateOrderStatus } from "@/lib/api";
+import SelectField from "@/components/SelectField";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -15,7 +16,12 @@ export default function AdminOrdersPage() {
   }, []);
 
   function handleStatusChange(orderId, status) {
-    updateOrderStatus(orderId, status);
+    const result = updateOrderStatus(orderId, status);
+
+    if (!result.success) {
+      return;
+    }
+
     refresh();
   }
 
@@ -38,8 +44,10 @@ export default function AdminOrdersPage() {
             <div className="orderCard" key={order.id}>
               <div className="orderTop">
                 <h2>Order #{order.id}</h2>
-                <select
-                  aria-label={`Status for order ${order.id}`}
+                <SelectField
+                  id={`order-status-${order.id}`}
+                  label={`Status for order ${order.id}`}
+                  className="statusSelect"
                   value={order.status}
                   onChange={(e) => handleStatusChange(order.id, e.target.value)}
                 >
@@ -48,7 +56,7 @@ export default function AdminOrdersPage() {
                   <option value="Ready for pickup">Ready for pickup</option>
                   <option value="Completed">Completed</option>
                   <option value="Cancelled">Cancelled</option>
-                </select>
+                </SelectField>
               </div>
 
               <p className="muted">{new Date(order.createdAt).toLocaleString()}</p>

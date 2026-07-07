@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import DemoRoleToggle from "@/components/DemoRoleToggle";
 
 export const metadata = {
     title: "LocalGadget",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
             Skip to content
         </a>
         <Navbar />
+        <DemoRoleToggle />
         {children}
         </body>
         </html>

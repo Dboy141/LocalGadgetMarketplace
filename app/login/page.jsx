@@ -74,8 +74,11 @@ export default function LoginPage() {
             {existingUser.fullName} is already connected to this session.
           </p>
           <div className="buttonRow">
-            <Link href="/tracking" className="primaryButton">
-              Track orders
+            <Link
+              href={existingUser.role === "admin" ? "/admin" : "/tracking"}
+              className="primaryButton"
+            >
+              {existingUser.role === "admin" ? "Open Admin" : "Track orders"}
             </Link>
             <Link href="/" className="secondaryButton">
               Continue Shopping
@@ -92,8 +95,7 @@ export default function LoginPage() {
         <p className="eyebrow">Account access</p>
         <h1>Sign in</h1>
         <p className="muted">
-          Use your phone number or Google. New accounts are created automatically
-          after verification.
+          Use your phone number or Google to continue.
         </p>
 
         <form onSubmit={otpSent ? handleVerifyOtp : handleRequestOtp} className="form">
@@ -105,6 +107,7 @@ export default function LoginPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+36 20 123 4567"
+              pattern="^\+?[0-9\s-]{7,18}$"
               required
             />
           </label>
@@ -115,6 +118,8 @@ export default function LoginPage() {
               <input
                 className={hasError ? "inputError" : ""}
                 inputMode="numeric"
+                maxLength={6}
+                pattern="\d{6}"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="123456"

@@ -12,6 +12,8 @@ export default function AdminProductsPage() {
     brand: "",
     description: "",
   });
+  const [message, setMessage] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   function refresh() {
     setProducts(getProducts());
@@ -24,7 +26,13 @@ export default function AdminProductsPage() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    addProduct(form);
+    const result = addProduct(form);
+
+    if (!result.success) {
+      setHasError(true);
+      setMessage(result.message);
+      return;
+    }
 
     setForm({
       name: "",
@@ -33,6 +41,8 @@ export default function AdminProductsPage() {
       description: "",
     });
 
+    setHasError(false);
+    setMessage(result.message);
     refresh();
   }
 
@@ -64,6 +74,7 @@ export default function AdminProductsPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Samsung Galaxy A55"
+                    minLength={2}
                     required
                 />
               </label>
@@ -74,6 +85,7 @@ export default function AdminProductsPage() {
                     value={form.brand}
                     onChange={(e) => setForm({ ...form, brand: e.target.value })}
                     placeholder="Samsung"
+                    minLength={2}
                     required
                 />
               </label>
@@ -84,6 +96,7 @@ export default function AdminProductsPage() {
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
                     placeholder="Smartphone"
+                    minLength={2}
                     required
                 />
               </label>
@@ -96,6 +109,7 @@ export default function AdminProductsPage() {
                         setForm({ ...form, description: e.target.value })
                     }
                     placeholder="Short product description..."
+                    minLength={8}
                     required
                 />
               </label>
@@ -103,6 +117,12 @@ export default function AdminProductsPage() {
               <button className="primaryButton" type="submit">
                 Add Product
               </button>
+
+              {message && (
+                  <p className={hasError ? "errorMessage" : "successMessage"}>
+                    {message}
+                  </p>
+              )}
             </form>
           </div>
 

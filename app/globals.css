@@ -214,6 +214,46 @@ img {
   font-size: 1.3rem;
 }
 
+.demoRoleToggle {
+  position: fixed;
+  top: 84px;
+  right: max(1rem, calc((100vw - var(--container)) / 2));
+  z-index: 110;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(14px);
+}
+
+.demoRoleToggle span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0 0.45rem;
+  text-transform: uppercase;
+}
+
+.demoRoleToggle button {
+  min-height: 34px;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 2px);
+  background: transparent;
+  color: var(--muted);
+  padding: 0.45rem 0.7rem;
+  font-weight: 850;
+}
+
+.demoRoleToggle button:hover,
+.demoRoleToggle .activeDemoRole {
+  background: var(--text);
+  color: white;
+}
+
 /* =========================================================
    PAGE LAYOUT
    General page containers and headings.
@@ -393,7 +433,6 @@ img {
 }
 
 input,
-select,
 textarea {
   width: 100%;
   border: 1px solid var(--border);
@@ -405,9 +444,63 @@ textarea {
   outline: none;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 500;
+  opacity: 1;
+}
+
 input:focus,
-select:focus,
 textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.selectField {
+  width: 100%;
+  min-width: 0;
+}
+
+.selectShell {
+  position: relative;
+}
+
+.selectShell::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+  pointer-events: none;
+  transform: translateY(-65%) rotate(45deg);
+}
+
+.selectShell select {
+  width: 100%;
+  min-height: 44px;
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--text);
+  padding: 0.78rem 2.75rem 0.78rem 0.9rem;
+  outline: none;
+  font-weight: 750;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.selectShell select:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.selectShell select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
@@ -620,6 +713,19 @@ textarea {
   align-items: center;
 }
 
+.locationActions .selectShell select,
+.filterBar .selectShell select {
+  min-height: 52px;
+}
+
+.statusSelect {
+  width: min(240px, 100%);
+}
+
+.statusSelect .selectShell select {
+  min-height: 42px;
+}
+
 /* =========================================================
    FILTER BAR
    Search, category, brand, and sort filters.
@@ -676,11 +782,22 @@ textarea {
 }
 
 .productImage {
-  height: 150px;
-  background: linear-gradient(135deg, #e0f2fe, #eef2ff);
-  color: var(--accent);
+  height: 180px;
+  background: #f8fafc;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.productImage span {
+  color: var(--accent);
   font-size: 2.5rem;
   font-weight: 950;
 }
@@ -1426,6 +1543,12 @@ th {
 
   .navLinksOpen {
     display: flex;
+  }
+
+  .demoRoleToggle {
+    top: auto;
+    right: 1rem;
+    bottom: 1rem;
   }
 
   .navLinks a,

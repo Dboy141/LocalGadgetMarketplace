@@ -9,6 +9,7 @@ import {
   getSelectedLocationId,
   setSelectedLocationId,
 } from "@/lib/api";
+import SelectField from "@/components/SelectField";
 import Toast from "@/components/Toast";
 
 export default function ProductBrowser() {
@@ -163,11 +164,9 @@ export default function ProductBrowser() {
           </div>
 
           <div className="locationActions">
-            <label className="visuallyHidden" htmlFor="shopping-location">
-              Shopping location
-            </label>
-            <select
+            <SelectField
                 id="shopping-location"
+                label="Shopping location"
                 value={selectedLocation}
                 onChange={handleManualLocationChange}
             >
@@ -176,7 +175,7 @@ export default function ProductBrowser() {
                     {location.name} — {location.city}
                   </option>
               ))}
-            </select>
+            </SelectField>
 
             <button className="secondaryButton" onClick={handleDetectLocation}>
               Use Browser Location
@@ -204,11 +203,9 @@ export default function ProductBrowser() {
               placeholder="Search by name, brand, or category..."
           />
 
-          <label className="visuallyHidden" htmlFor="category-filter">
-            Filter by category
-          </label>
-          <select
+          <SelectField
               id="category-filter"
+              label="Filter by category"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -217,13 +214,11 @@ export default function ProductBrowser() {
                   {category === "All" ? "All categories" : category}
                 </option>
             ))}
-          </select>
+          </SelectField>
 
-          <label className="visuallyHidden" htmlFor="brand-filter">
-            Filter by brand
-          </label>
-          <select
+          <SelectField
               id="brand-filter"
+              label="Filter by brand"
               value={brandFilter}
               onChange={(e) => setBrandFilter(e.target.value)}
           >
@@ -232,13 +227,11 @@ export default function ProductBrowser() {
                   {brand === "All" ? "All brands" : brand}
                 </option>
             ))}
-          </select>
+          </SelectField>
 
-          <label className="visuallyHidden" htmlFor="sort-products">
-            Sort products
-          </label>
-          <select
+          <SelectField
               id="sort-products"
+              label="Sort products"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
           >
@@ -246,7 +239,7 @@ export default function ProductBrowser() {
             <option value="price-low">Price: low to high</option>
             <option value="price-high">Price: high to low</option>
             <option value="stock-high">Most stock</option>
-          </select>
+          </SelectField>
         </div>
 
         {products.length === 0 ? (
@@ -267,7 +260,11 @@ export default function ProductBrowser() {
                       key={`${product.productId}-${product.locationId}`}
                   >
                     <div className="productImage">
-                      {product.brand.slice(0, 2).toUpperCase()}
+                      {product.image ? (
+                          <img src={product.image} alt={product.name} />
+                      ) : (
+                          <span>{product.brand.slice(0, 2).toUpperCase()}</span>
+                      )}
                     </div>
 
                     <div className="productBody">

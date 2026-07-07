@@ -99,6 +99,7 @@ export default function AdminAlertsPage() {
                         <input
                             type="number"
                             min="1"
+                            step="1"
                             value={restockAmounts[alert.id] || ""}
                             onChange={(e) =>
                                 handleAmountChange(alert.id, e.target.value)

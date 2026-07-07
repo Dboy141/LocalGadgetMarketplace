@@ -12,6 +12,8 @@ export default function AdminLocationsPage() {
     latitude: "",
     longitude: "",
   });
+  const [message, setMessage] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   function refresh() {
     setLocations(getLocations());
@@ -23,12 +25,21 @@ export default function AdminLocationsPage() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    addLocation({
+    const result = addLocation({
       ...form,
       latitude: Number(form.latitude),
       longitude: Number(form.longitude),
     });
+
+    if (!result.success) {
+      setHasError(true);
+      setMessage(result.message);
+      return;
+    }
+
     setForm({ name: "", city: "", address: "", latitude: "", longitude: "" });
+    setHasError(false);
+    setMessage(result.message);
     refresh();
   }
 
@@ -52,26 +63,32 @@ export default function AdminLocationsPage() {
           <form onSubmit={handleSubmit} className="form">
             <label>
               Location name
-              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} minLength={2} required />
             </label>
             <label>
               City
-              <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
+              <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} minLength={2} required />
             </label>
             <label>
               Address
-              <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
+              <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} minLength={4} required />
             </label>
             <label>
               Latitude
-              <input type="number" step="any" value={form.latitude} onChange={(e) => setForm({ ...form, latitude: e.target.value })} required />
+              <input type="number" min="-90" max="90" step="any" value={form.latitude} onChange={(e) => setForm({ ...form, latitude: e.target.value })} required />
             </label>
             <label>
               Longitude
-              <input type="number" step="any" value={form.longitude} onChange={(e) => setForm({ ...form, longitude: e.target.value })} required />
+              <input type="number" min="-180" max="180" step="any" value={form.longitude} onChange={(e) => setForm({ ...form, longitude: e.target.value })} required />
             </label>
 
             <button className="primaryButton" type="submit">Add Location</button>
+
+            {message && (
+              <p className={hasError ? "errorMessage" : "successMessage"}>
+                {message}
+              </p>
+            )}
           </form>
         </div>
 

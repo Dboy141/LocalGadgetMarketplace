@@ -69,7 +69,7 @@ export default function Navbar() {
           Shop
         </Link>
 
-        {user && (
+        {user && user.role !== "admin" && (
           <Link
             href="/tracking"
             onClick={() => setMenuOpen(false)}
@@ -89,15 +89,17 @@ export default function Navbar() {
           </Link>
         )}
 
-        <Link
-          href="/cart"
-          className="cartLink"
-          onClick={() => setMenuOpen(false)}
-          aria-current={getCurrentPage("/cart")}
-          aria-label={`Cart with ${cartCount} items`}
-        >
-          Cart ({cartCount})
-        </Link>
+        {user?.role !== "admin" && (
+          <Link
+            href="/cart"
+            className="cartLink"
+            onClick={() => setMenuOpen(false)}
+            aria-current={getCurrentPage("/cart")}
+            aria-label={`Cart with ${cartCount} items`}
+          >
+            Cart ({cartCount})
+          </Link>
+        )}
 
         {user ? (
           <>
