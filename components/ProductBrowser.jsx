@@ -17,12 +17,20 @@ export default function ProductBrowser() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [products, setProducts] = useState([]);
   const [locationStatus, setLocationStatus] = useState("");
+  const [locationPanelOpen, setLocationPanelOpen] = useState(false);
   const [toast, setToast] = useState({ message: "", type: "success" });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [brandFilter, setBrandFilter] = useState("All");
   const [sortOption, setSortOption] = useState("default");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, categoryFilter, brandFilter, sortOption]);
 
   function showToast(message, type = "success") {
     setToast({ message, type });
@@ -50,11 +58,13 @@ export default function ProductBrowser() {
     if (savedLocation) {
       setSelectedLocation(String(savedLocation));
       refreshProducts(savedLocation);
+      setLocationPanelOpen(false);
     } else if (allLocations.length > 0) {
       const firstLocationId = allLocations[0].id;
       setSelectedLocation(String(firstLocationId));
       setSelectedLocationId(firstLocationId);
       refreshProducts(firstLocationId);
+      setLocationPanelOpen(true);
     }
   }, []);
 
@@ -98,6 +108,12 @@ export default function ProductBrowser() {
 
     return result;
   }, [products, searchTerm, categoryFilter, brandFilter, sortOption]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredProducts, currentPage, itemsPerPage]);
 
   function handleManualLocationChange(e) {
     const locationId = Number(e.target.value);
@@ -150,39 +166,59 @@ export default function ProductBrowser() {
     }
   }
 
+  const activeLocationLabel =
+    locations.find((location) => String(location.id) === selectedLocation)?.name ||
+    "Select a location";
+
   return (
       <section className="shopSection">
         <Toast message={toast.message} type={toast.type} />
 
         <div className="locationCard">
-          <div>
-            <p className="eyebrow">Your shopping location</p>
-            <h2>Choose where you want to buy from</h2>
-            <p className="muted">
-              Product prices and stock change depending on the selected location.
-            </p>
-          </div>
+          <button
+            type="button"
+            className="locationSummaryRow"
+            onClick={() => setLocationPanelOpen((open) => !open)}
+            aria-expanded={locationPanelOpen}
+            aria-controls="location-panel"
+          >
+            <span className="locationSummaryText">
+              <span className="eyebrow">Shopping from</span>
+              <strong>{activeLocationLabel}</strong>
+            </span>
+            <span className="locationSummaryToggle">
+              {locationPanelOpen ? "Hide" : "Change location"}
+            </span>
+          </button>
 
-          <div className="locationActions">
-            <SelectField
-                id="shopping-location"
-                label="Shopping location"
-                value={selectedLocation}
-                onChange={handleManualLocationChange}
-            >
-              {locations.map((location) => (
-                  <option key={location.id} value={location.id}>
-                    {location.name} — {location.city}
-                  </option>
-              ))}
-            </SelectField>
+          {locationPanelOpen && (
+            <div id="location-panel" className="locationPanelBody">
+              <p className="muted">
+                Product prices and stock change depending on the selected location.
+              </p>
 
-            <button className="secondaryButton" onClick={handleDetectLocation}>
-              Use Browser Location
-            </button>
-          </div>
+              <div className="locationActions">
+                <SelectField
+                    id="shopping-location"
+                    label="Shopping location"
+                    value={selectedLocation}
+                    onChange={handleManualLocationChange}
+                >
+                  {locations.map((location) => (
+                      <option key={location.id} value={location.id}>
+                        {location.name} — {location.city}
+                      </option>
+                  ))}
+                </SelectField>
 
-          {locationStatus && <p className="message">{locationStatus}</p>}
+                <button className="secondaryButton" onClick={handleDetectLocation}>
+                  Use Browser Location
+                </button>
+              </div>
+
+              {locationStatus && <p className="message">{locationStatus}</p>}
+            </div>
+          )}
         </div>
 
         <div className="sectionTitle">
@@ -253,15 +289,23 @@ export default function ProductBrowser() {
               <p>Try another keyword, brand, category, or sorting option.</p>
             </div>
         ) : (
-            <div className="productGrid">
-              {filteredProducts.map((product) => (
-                  <article
+            <>
+              <div className="productGrid">
+                {paginatedProducts.map((product) => (
+                    <article
                       className="productCard"
                       key={`${product.productId}-${product.locationId}`}
                   >
                     <div className="productImage">
                       {product.image ? (
-                          <img src={product.image} alt={product.name} />
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            decoding="async"
+                            width="400"
+                            height="400"
+                          />
                       ) : (
                           <span>{product.brand.slice(0, 2).toUpperCase()}</span>
                       )}
@@ -291,7 +335,28 @@ export default function ProductBrowser() {
                     </div>
                   </article>
               ))}
-            </div>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="paginationControls">
+                  <button
+                    className="secondaryButton"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  >
+                    Previous
+                  </button>
+                  <span>Page {currentPage} of {totalPages}</span>
+                  <button
+                    className="secondaryButton"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
         )}
       </section>
   );

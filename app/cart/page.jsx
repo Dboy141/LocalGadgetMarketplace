@@ -62,24 +62,60 @@ export default function CartPage() {
 
             {cart.map((item) => (
               <div className="cartItem" key={`${item.productId}-${item.locationId}`}>
-                <div>
+                <div className="cartItemImage">
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} loading="lazy" width="80" height="80" />
+                  ) : (
+                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+
+                <div className="cartItemInfo">
                   <h3>{item.name}</h3>
                   <p className="muted">{item.locationName}</p>
                   <p>€{item.price.toFixed(2)} each</p>
                 </div>
 
                 <div className="cartControls">
-                  <input
-                    aria-label={`Quantity for ${item.name}`}
-                    type="number"
-                    min="1"
-                    max={item.stock}
-                    step="1"
-                    value={item.quantity}
-                    onChange={(e) =>
-                      handleQuantityChange(item.productId, item.locationId, e.target.value)
-                    }
-                  />
+                  <div className="quantityStepper">
+                    <button
+                      type="button"
+                      className="quantityStepperButton"
+                      aria-label={`Decrease quantity for ${item.name}`}
+                      disabled={item.quantity <= 1}
+                      onClick={() =>
+                        handleQuantityChange(item.productId, item.locationId, item.quantity - 1)
+                      }
+                    >
+                      −
+                    </button>
+
+                    <input
+                      aria-label={`Quantity for ${item.name}`}
+                      className="quantityStepperInput"
+                      type="number"
+                      min="1"
+                      max={item.stock}
+                      step="1"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(item.productId, item.locationId, e.target.value)
+                      }
+                    />
+
+                    <button
+                      type="button"
+                      className="quantityStepperButton"
+                      aria-label={`Increase quantity for ${item.name}`}
+                      disabled={item.quantity >= item.stock}
+                      onClick={() =>
+                        handleQuantityChange(item.productId, item.locationId, item.quantity + 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+
                   <button
                     className="dangerButton"
                     onClick={() => handleRemove(item.productId, item.locationId)}

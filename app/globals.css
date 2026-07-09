@@ -700,10 +700,48 @@ textarea {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1.35rem;
   box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.locationSummaryRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.35rem;
+  background: none;
+  border: none;
+  text-align: left;
+  min-height: 44px;
+}
+
+.locationSummaryRow:hover {
+  background: var(--accent-soft);
+}
+
+.locationSummaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.locationSummaryText .eyebrow {
+  margin: 0;
+}
+
+.locationSummaryToggle {
+  color: var(--accent);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.locationPanelBody {
+  padding: 1rem 1.35rem 1.35rem;
   display: grid;
   gap: 1rem;
+  border-top: 1px solid var(--border);
 }
 
 .locationActions {
@@ -761,7 +799,7 @@ textarea {
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
 }
 
@@ -797,9 +835,28 @@ textarea {
 }
 
 .productImage span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent-soft) 0%, #e0e7ff 100%);
   color: var(--accent);
   font-size: 2.5rem;
   font-weight: 950;
+}
+
+/* Pagination controls */
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.paginationControls span {
+  font-weight: 600;
+  color: var(--muted);
 }
 
 .productBody {
@@ -886,6 +943,40 @@ textarea {
   align-items: center;
 }
 
+.cartItemImage {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.cartItemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.35rem;
+}
+
+.cartItemImage span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent-soft) 0%, #e0e7ff 100%);
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.cartItemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
 .cartControls {
   display: flex;
   align-items: center;
@@ -893,7 +984,53 @@ textarea {
   flex-wrap: wrap;
 }
 
-.cartControls input {
+.quantityStepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.quantityStepperButton {
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: white;
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.quantityStepperButton:hover:not(:disabled) {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.quantityStepperButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quantityStepperInput {
+  width: 48px;
+  min-height: 44px;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.quantityStepperInput::-webkit-outer-spin-button,
+.quantityStepperInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cartControls > input {
   width: 88px;
 }
 
@@ -1402,10 +1539,6 @@ th {
 ========================================================= */
 
 @media (max-width: 1024px) {
-  .productGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .filterBar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1581,10 +1714,6 @@ th {
     grid-template-columns: 1fr;
   }
 
-  .productGrid {
-    grid-template-columns: 1fr;
-  }
-
   .pageHeader {
     flex-direction: column;
     align-items: flex-start;
@@ -1592,6 +1721,7 @@ th {
 
   .cartItem {
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .cartControls {
@@ -1599,7 +1729,7 @@ th {
     justify-content: flex-start;
   }
 
-  .cartControls input {
+  .cartControls > input {
     flex: 1 1 120px;
   }
 
@@ -1674,7 +1804,6 @@ th {
   .summaryCard,
   .alertCard,
   .statCard,
-  .locationCard,
   .infoPanel {
     padding: 1.1rem;
   }
